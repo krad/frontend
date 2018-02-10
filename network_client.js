@@ -1,7 +1,6 @@
 
 const readFromFile = (filename) => {
   return new Promise((resolve, reject) => {
-    setTimeout(_ => {
       switch (filename) {
         case '/broadcasts':
         const broadcasts = require('./broadcasts')
@@ -12,7 +11,6 @@ const readFromFile = (filename) => {
         default:
           reject('could not find stub')
       }
-    }, 50)
   })
 }
 

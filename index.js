@@ -137,7 +137,7 @@ const BroadcastInfo = ({broadcast}) =>
     </div>
   </div>
 
-const BrowseVideos = ({ location, match }) => (
+const BrowseVideos = (state, actions) => ({ location, match }) => (
   <browse oncreate={actions.fetchBroadcasts(state, actions)}>
     <HeroSection motto={state.motto} />
     <VideosSection
@@ -274,10 +274,10 @@ const OtherAuthOptionsComponent = () =>
     <Link to='/help'>Need Help?</Link> &nbsp;·&nbsp;
   </p>
 
-const view = (state) =>
+const view = (state, actions) =>
   <main>
     <HeaderSection user={state.user} />
-    <Route path='/' render={BrowseVideos} />
+    <Route path='/' render={BrowseVideos(state, actions)} />
     <Route path='/watch/:broadcastID' render={PlayerView} />
     <Route path='/login' render={LoginView} />
     <Route path='/signup' render={SignupView} />
@@ -285,4 +285,4 @@ const view = (state) =>
 
 const main = app(state, actions, view, document.body)
 
-const unsubscribe = location.subscribe(actions.location)
+const unsubscribe = location.subscribe(main.location)

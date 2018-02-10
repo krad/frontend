@@ -2,10 +2,18 @@ import { networkClient } from './network_client'
 const plainview = require('@krad/plainview')
 
 export const actions = {
+
+  log: (thing) => {
+    console.log(thing)
+  },
+
   fetchBroadcasts: (state, actions) => {
     networkClient.get('/broadcasts')
     .then(broadcasts => {
-      actions.updateBroadcasts(state, broadcasts)
+      state.broadcasts = broadcasts
+      console.log(state);
+
+      // actions.updateBroadcasts(state, broadcasts)
     }).catch(err => {
       console.log(err)
     })
