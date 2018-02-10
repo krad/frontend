@@ -1,16 +1,12 @@
 
 const readFromFile = (filename) => {
   return new Promise((resolve, reject) => {
-      switch (filename) {
-        case '/broadcasts':
+    setTimeout(() => {
+      if (filename.startsWith('/broadcasts')) {
         const broadcasts = require('./broadcasts')
-          resolve(broadcasts.default)
-          break;
-        case /\/broadcasts\//:
-          console.log('matched pattern')
-        default:
-          reject('could not find stub')
+        resolve(broadcasts.default)
       }
+    }, 1000)
   })
 }
 

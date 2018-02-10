@@ -7,23 +7,17 @@ export const actions = {
     console.log(thing)
   },
 
-  fetchBroadcasts: (state, actions) => {
+  fetchBroadcasts:  () => async (state, actions) => {
     networkClient.get('/broadcasts')
     .then(broadcasts => {
-      console.log(actions);
-      console.log(state);
-      state.broadcasts = broadcasts
-      console.log(state);
-
-      // actions.updateBroadcasts(state, broadcasts)
+      actions.updateBroadcasts(broadcasts)
+      console.log(broadcasts);
     }).catch(err => {
       console.log(err)
     })
   },
 
-  updateBroadcasts: (state, broadcasts) => {
-    state.broadcasts = broadcasts
-  },
+  updateBroadcasts: broadcasts => state => ({broadcasts: broadcasts}),
 
   fetchBroadcast: (broadcastID) => {
     var endpoint = ['/broadcasts', broadcastID].join('/')
@@ -35,9 +29,7 @@ export const actions = {
     })
   },
 
-  setCurrentBroadcast: (broadcast) => {
-    state.currentBroadcast = broadcast
-  },
+  setCurrentBroadcast: broadcast => state => ({currentBroadcast: broadcast}),
 
   configurePlayer: (el, state, actions) => {
     state.player = new plainview(el.id)

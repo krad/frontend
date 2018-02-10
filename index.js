@@ -138,7 +138,7 @@ const BroadcastInfo = ({broadcast}) =>
   </div>
 
 const BrowseVideos = (state, actions) => ({ location, match }) => (
-  <browse oncreate={actions.fetchBroadcasts(state, actions)}>
+  <browse oncreate={() => actions.fetchBroadcasts()}>
     <HeroSection motto={state.motto} />
     <VideosSection
       bucket={state.videoBucket}
