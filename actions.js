@@ -10,6 +10,8 @@ export const actions = {
   fetchBroadcasts: (state, actions) => {
     networkClient.get('/broadcasts')
     .then(broadcasts => {
+      console.log(actions);
+      console.log(state);
       state.broadcasts = broadcasts
       console.log(state);
 
