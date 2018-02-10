@@ -11,7 +11,8 @@
   "dependencies": {
     "@hyperapp/router": "^0.4.1",
     "@krad/plainview": "0.0.16",
-    "hyperapp": "^1.1.1"
+    "hyperapp": "^1.1.1",
+    "moment": "^2.20.1"
   },
   "devDependencies": {
     "babel-plugin-transform-react-jsx": "^6.24.1",

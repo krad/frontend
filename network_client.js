@@ -2,6 +2,11 @@
 const readFromFile = (filename) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
+      if (filename.startsWith('/broadcasts/')) {
+        const broadcasts = require('./broadcast')
+        resolve(broadcasts.default)
+      }
+
       if (filename.startsWith('/broadcasts')) {
         const broadcasts = require('./broadcasts')
         resolve(broadcasts.default)

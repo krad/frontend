@@ -7,7 +7,8 @@ import { state } from './state'
 import { HeaderSection } from './header'
 import { BrowseVideos } from './videos_browser'
 import { PlayerView } from './player_view'
-import { LoginView, SignupView } from './login'
+import { LoginView } from './login'
+import { SignupView } from './signup'
 
 actions.location = location.actions
 state.location   = location.state

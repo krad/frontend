@@ -4,6 +4,7 @@ import { Link, Route, location } from "@hyperapp/router"
 export const HeaderSection = ({ input, user }) =>
   <nav class='navbar is-warning' role='navigation' aria-label='main navigation'>
     <HeaderLeftSection user={user} />
+    <HeaderRightSection user={user} />
   </nav>
 
 const HeaderLeftSection = ({user}) =>
@@ -21,10 +22,24 @@ const HeaderRightSection = ({user}) =>
   </div>
 
 const HeaderSignUpSection = () =>
-  <span>
-    <div class='navbar-item>'><Link to='/signup' class='navbar-link'>Signup</Link></div>
-    <div class='navbar-item'><Link to='/login' class='navbar-link'>Login</Link></div>
-  </span>
+  <div class="navbar-end">
+    <div class="navbar-item">
+      <div class="field is-grouped">
+        <p class="control">
+          <Link to='/signup' class="button is-info is-outlined is-small">
+            <span class="icon"><i class="fa fa-user-plus"></i></span>
+            <span>Signup</span>
+          </Link>
+        </p>
+        <p class="control">
+          <Link to='/login' class="button is-small is-info is-outlined">
+            <span class="icon"><i class="fa fa-user"></i></span>
+            <span>Login</span>
+          </Link>
+        </p>
+      </div>
+    </div>
+  </div>
 
 const HeaderSearch = () =>
   <div class='navbar-item'>

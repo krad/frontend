@@ -15,11 +15,12 @@ export const actions = {
 
   updateBroadcasts: broadcasts => state => ({broadcasts: broadcasts}),
 
-  fetchBroadcast: (broadcastID) => {
-    var endpoint = ['/broadcasts', broadcastID].join('/')
-    networkClient.get(endpoint)
+  fetchBroadcast: broadcastID => async (state, actions) => {
+    actions.setIsFetching(true)
+    await networkClient.get(['/broadcasts', broadcastID].join('/'))
     .then(broadcast => {
       actions.setCurrentBroadcast(broadcast)
+      actions.setIsFetching(false)
     }).catch(err => {
       console.log(err)
     })
@@ -31,7 +32,7 @@ export const actions = {
 
   configurePlayer: el => state => {
     state.player = new plainview(el.id)
-    state.player.play(x => { console.log(x) })
+    state.player.play(x => { })
   },
 
   removeCurrentBroadcast: () => {
