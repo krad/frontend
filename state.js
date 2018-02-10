@@ -14,7 +14,5 @@ export const state = {
   broadcasts: [],
   currentBroadcast: null,
   player: null,
-  hi: () => {
-    console.log(location.state);
-  }
+  isFetching: false
 }

@@ -3,18 +3,14 @@ const plainview = require('@krad/plainview')
 
 export const actions = {
 
-  log: (thing) => {
-    console.log(thing)
-  },
-
   fetchBroadcasts:  () => async (state, actions) => {
-    networkClient.get('/broadcasts')
+    actions.setIsFetching(true)
+    await networkClient.get('/broadcasts')
     .then(broadcasts => {
       actions.updateBroadcasts(broadcasts)
-      console.log(broadcasts);
-    }).catch(err => {
-      console.log(err)
+      actions.setIsFetching(false)
     })
+    .catch(err => { console.log(err) })
   },
 
   updateBroadcasts: broadcasts => state => ({broadcasts: broadcasts}),
@@ -29,12 +25,13 @@ export const actions = {
     })
   },
 
+  setIsFetching: (isFetching) => state => ({isFetching: isFetching}),
+
   setCurrentBroadcast: broadcast => state => ({currentBroadcast: broadcast}),
 
-  configurePlayer: (el, state, actions) => {
+  configurePlayer: el => state => {
     state.player = new plainview(el.id)
     state.player.play(x => { console.log(x) })
-    document.wut = state.player
   },
 
   removeCurrentBroadcast: () => {
