@@ -2,6 +2,9 @@ import { h, app } from "hyperapp"
 import { Link, Route, location } from "@hyperapp/router"
 import { UserItemProfile } from './users'
 import { ShowSpinnerIf } from './spinner'
+import { LikeButton, DislikeButton, FlagButton } from './viewer_interactions'
+import { CommentBox } from './comments'
+
 import moment from 'moment'
 
 export const PlayerView = (state, actions) => ({ location, match }) =>
@@ -14,28 +17,30 @@ export const PlayerView = (state, actions) => ({ location, match }) =>
         actions={actions}
         />
       <ShowSpinnerIf isFetching={state.isFetching} />
-      <ShowBroadcastInfoIf broadcast={state.currentBroadcast} />
+      <ShowBroadcastInfoIf
+        broadcast={state.currentBroadcast}
+        state={state}
+        actions={actions} />
     </div>
   </watch>
 
-const VideoTag = ({state, actions, bucket, broadcastID}) =>
-  <video id={['player', broadcastID].join('-')}
-    poster={[bucket, broadcastID, '0.jpg'].join('/')}
-    oncreate={el => actions.configurePlayer(el, state, actions)}
-    controls
-    >
-    <source src={[bucket, broadcastID, 'vod.m3u8'].join('/')} type='application/x-mpegURL' />
-  </video>
-
-const ShowBroadcastInfoIf = ({broadcast}) => {
-  if (broadcast) { return BroadcastInfo(broadcast) }
+const ShowBroadcastInfoIf = ({broadcast, state, actions}) => {
+  if (broadcast) {
+    return <BroadcastInfo state={state} actions={actions} broadcast={broadcast} />
+  }
 }
 
-const BroadcastInfo = (broadcast) =>
+const BroadcastInfo = ({state, actions, broadcast}) =>
   <section id='broadcast-info' class=''>
     <section class='section'>
-      <BroadcastDetails broadcast={broadcast} /><br />
-      <BroadcastControls broadcast={broadcast} />
+      <BroadcastDetails broadcast={broadcast} />
+      <br />
+
+      <BroadcastControls
+        broadcast={broadcast}
+        state={state.viewerInteractions}
+        actions={actions.viewerInteractions}  />
+
       <UserItemProfile user={broadcast.user} />
       <hr />
     </section>
@@ -49,35 +54,21 @@ const BroadcastDetails = ({broadcast}) =>
     <p class='subtitle is-6'>0 views</p>
   </div>
 
-const BroadcastControls = ({broadcast}) =>
+const BroadcastControls = ({state, actions, broadcast}) =>
   <div class='level-right'>
-    <p class='level-item'><LikeButton /></p>
-    <p class='level-item'><DislikeButton /></p>
-    <p class='level-item'><FlagButton /></p>
+    <p class='level-item'><LikeButton state={state.like} actions={actions.like} broadcast={broadcast} /> </p>
+    <p class='level-item'><DislikeButton state={state.dislike} actions={actions.dislike} broadcast={broadcast} /></p>
+    <p class='level-item'><FlagButton state={state.flag} actions={actions.flag} broadcast={broadcast} /></p>
   </div>
 
-const LikeButton = () =>
-  <a class="button is-success">
-    <span class="icon is-small"><i class="fas fa-thumbs-up"></i></span>
-    <span>Like</span>
-  </a>
-
-const DislikeButton = () =>
-  <a class="button is-info">
-    <span class="icon is-small"><i class="fas fa-thumbs-down"></i></span>
-    <span>Dislike</span>
-  </a>
-
-const FlagButton = () =>
-  <a class="button is-danger">
-    <span class="icon is-small"><i class="fas fa-flag"></i></span>
-    <span>Flag</span>
-  </a>
-
-const CommentBox = () =>
-  <section class='section'>
-
-  </section>
+const VideoTag = ({state, actions, bucket, broadcastID}) =>
+  <video id={['player', broadcastID].join('-')}
+    poster={[bucket, broadcastID, '0.jpg'].join('/')}
+    oncreate={el => actions.configurePlayer(el, state, actions)}
+    controls
+    >
+    <source src={[bucket, broadcastID, 'vod.m3u8'].join('/')} type='application/x-mpegURL' />
+  </video>
 
 const PlayerUserInfo = ({user}) =>
   <section id='video-user-info' class='card-content'>

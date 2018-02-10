@@ -14,5 +14,20 @@ export const state = {
   broadcasts: [],
   currentBroadcast: null,
   player: null,
-  isFetching: false
+  isFetching: false,
+  error: null,
+  viewerInteractions: {
+    like: {
+      isLoading: false,
+      hasClicked: false,
+    },
+    dislike: {
+      isLoading: false,
+      hasClicked: false,
+    },
+    flag: {
+      isLoading: false,
+      hasClicked: false,
+    },
+  }
 }

@@ -15,13 +15,33 @@ const readFromFile = (filename) => {
   })
 }
 
-export const networkClient = {
-    get: (path) => {
-      if (process.NODE_ENV) {
-        return fetch(path)
-        .then(response => response.text())
-      } else {
-        return readFromFile(path)
+export const GET = (path) => {
+  if (process.NODE_ENV) {
+
+    return fetch(path)
+    .then(response => {
+      var contentType = response.headers.get("content-type");
+      if(contentType && contentType.includes("application/json")) {
+        return response.json();
       }
+      throw new TypeError("Didn't get JSON from the API");
+    })
+
+  } else {
+    return readFromFile(path)
+  }
+}
+
+export const POST = (path, data) => {
+  if (process.NODE_ENV) {
+    var requestParams = {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': 'application/json'})
     }
+
+    return fetch(path, requestParams)
+  }
+
+  return new Promise((resolve, reject) => { resolve('ok') })
 }

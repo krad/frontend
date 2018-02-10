@@ -26,13 +26,13 @@ const HeaderSignUpSection = () =>
     <div class="navbar-item">
       <div class="field is-grouped">
         <p class="control">
-          <Link to='/signup' class="button is-info is-outlined is-small">
+          <Link to='/signup' class="button is-info is-outlined">
             <span class="icon"><i class="fa fa-user-plus"></i></span>
             <span>Signup</span>
           </Link>
         </p>
         <p class="control">
-          <Link to='/login' class="button is-small is-info is-outlined">
+          <Link to='/login' class="button is-info is-outlined">
             <span class="icon"><i class="fa fa-user"></i></span>
             <span>Login</span>
           </Link>
