@@ -20,24 +20,13 @@ export const actions = {
 
   currentBroadcast: {
     user: {},
-    opinion: undefined,
     setIsLoading: setIsLoading,
-
-    setOpinion: (value) => state => ({opinion: value}),
-
     like: (value) => async (state, actions) => {
-      actions.setOpinion('like')
       actions.setIsLoading(true)
       setTimeout(() => {
         actions.setIsLoading(false)
       }, 500)
     },
-    dislike: (value) => async(state, actions) => {
-      actions.setIsLoading(true)
-    },
-    flag: (value) => async(state, actions) => {
-      actions.setIsLoading(true)
-    }
 
   },
 

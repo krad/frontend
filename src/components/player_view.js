@@ -48,8 +48,6 @@ const BroadcastDetails = ({broadcast}) =>
 const BroadcastControls = ({broadcast, broadcastActions}) =>
   <div class='level-right'>
     <p class='level-item'><OpinionButton broadcast={broadcast} opinion={broadcastActions.like} name='Like' /></p>
-    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={broadcastActions.dislike} name='Dislike' /></p>
-    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={broadcastActions.flag} name='Flag' /></p>
   </div>
 
 const VideoTag = ({state, actions, bucket, broadcastID}) =>
