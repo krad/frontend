@@ -1,10 +1,7 @@
 import { GET, POST } from '../network_client'
 import { fetchBroadcasts, fetchBroadcast } from './api_actions'
+import { setIsLoading, setIsFetching, setError } from './async_helpers'
 const plainview = require('@krad/plainview')
-
-const setIsLoading = (isLoading) => state => ({isLoading: isLoading})
-const setIsFetching = (isFetching) => state => ({isFetching: isFetching})
-const setError = (errorMessage) => state => ({error: errorMessage})
 
 const updateBroadcasts = (broadcasts) => state => ({broadcasts: broadcasts})
 const setCurrentBroadcast = (broadcast) => state => ({currentBroadcast: broadcast})
@@ -17,6 +14,22 @@ export const actions = {
   setError: setError,
   updateBroadcasts: updateBroadcasts,
   setCurrentBroadcast: setCurrentBroadcast,
+
+  loginActions: {
+    edit: value => state => {
+      var update = {}
+      update[value.name] = value.value
+      return update
+    },
+    submit: value => async (state, actions) => {
+      console.log(state);
+      POST('/users/login', state).then(result => {
+        console.log(result);
+      }).catch(err => {
+        console.log(err);
+      })
+    }
+  },
 
   currentBroadcast: {
     user: {},
@@ -39,7 +52,7 @@ export const actions = {
       }).catch(err => {
         actions.setError(`Could not ${opinion} broadcast`)
       })
-      
+
     },
 
     like: broadcastID => async (state, actions) => {
