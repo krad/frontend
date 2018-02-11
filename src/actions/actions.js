@@ -20,12 +20,38 @@ export const actions = {
 
   currentBroadcast: {
     user: {},
+    setError: setError,
     setIsLoading: setIsLoading,
-    like: (value) => async (state, actions) => {
-      actions.setIsLoading(true)
-      setTimeout(() => {
-        actions.setIsLoading(false)
-      }, 500)
+    setOpinion: value => state => ({opinion: value}),
+
+    postOpinion: value => async (state, actions) => {
+
+      var loadingKey = {}
+      loadingKey[value.opinion] = true
+
+      actions.setIsLoading(loadingKey)
+      var endpoint = ['/broadcasts', value.broadcastID, value.opinion].join('/')
+      POST(endpoint, value)
+      .then(result => {
+        loadingKey[value.opinion] = false
+        actions.setIsLoading(loadingKey)
+        actions.setOpinion(value.opinion)
+      }).catch(err => {
+        actions.setError(`Could not ${opinion} broadcast`)
+      })
+      
+    },
+
+    like: broadcastID => async (state, actions) => {
+      actions.postOpinion({broadcastID: broadcastID, opinion: 'like'})
+    },
+
+    dislike: broadcastID => async (state, actions) => {
+      actions.postOpinion({broadcastID: broadcastID, opinion: 'dislike'})
+    },
+
+    flag: broadcastID => async (state, actions) => {
+      actions.postOpinion({broadcastID: broadcastID, opinion: 'flag'})
     },
 
   },

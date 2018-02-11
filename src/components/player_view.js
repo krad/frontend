@@ -18,8 +18,10 @@ export const PlayerView = (state, actions) => ({ location, match }) =>
         actions={actions}
         />
 
-      <ShowSpinnerIf isFetching={state.isFetching} />
-      <ShowBroadcastInfoIf broadcast={state.currentBroadcast} broadcastActions={actions.currentBroadcast}/>
+        <ShowSpinnerIf isFetching={state.isFetching} />
+        <ShowBroadcastInfoIf
+          broadcast={state.currentBroadcast}
+          broadcastActions={actions.currentBroadcast} />
     </div>
   </watch>
 
@@ -48,6 +50,8 @@ const BroadcastDetails = ({broadcast}) =>
 const BroadcastControls = ({broadcast, broadcastActions}) =>
   <div class='level-right'>
     <p class='level-item'><OpinionButton broadcast={broadcast} opinion={broadcastActions.like} name='Like' /></p>
+    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={broadcastActions.dislike} name='Dislike' /></p>
+    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={broadcastActions.flag} name='Flag' /></p>
   </div>
 
 const VideoTag = ({state, actions, bucket, broadcastID}) =>

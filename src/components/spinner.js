@@ -3,7 +3,7 @@ import { Link, Route, location } from "@hyperapp/router"
 
 export const ShowSpinnerIf = ({isFetching}) => {
   if (isFetching) { return LoadingSpinner() }
-  else { return "" }
+  else { return <div></div> }
 }
 
 const LoadingSpinner = () =>

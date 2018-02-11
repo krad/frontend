@@ -6,5 +6,5 @@ export const state = {
   isFetching: false,
   error: null,
   broadcasts: [],
-  currentBroadcast: undefined
+  currentBroadcast: {}
 }

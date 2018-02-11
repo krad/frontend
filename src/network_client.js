@@ -6,12 +6,17 @@ const readFromFile = (filename) => {
       if (filename.startsWith('/broadcasts/')) {
         const broadcasts = require('./broadcast')
         resolve(broadcasts.default)
+        return
       }
 
       if (filename.startsWith('/broadcasts')) {
         const broadcasts = require('./broadcasts')
         resolve(broadcasts.default)
+        return
       }
+
+      resolve(JSON.parse('{}'))
+      return
     }, 1000)
   })
 }
@@ -32,15 +37,14 @@ export const GET = (path) => {
 }
 
 export const POST = (path, data) => {
-  if (process.NODE_ENV) {
+  if (config.IsTesting) {
+    return readFromFile(path)
+  } else {
     var requestParams = {
       method: 'POST',
       body: JSON.stringify(data),
       headers: new Headers({'Content-Type': 'application/json'})
     }
-
     return fetch(path, requestParams)
   }
-
-  return new Promise((resolve, reject) => { resolve('ok') })
 }
