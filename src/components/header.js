@@ -1,10 +1,16 @@
 import { h, app } from "hyperapp"
 import { Link, Route, location } from "@hyperapp/router"
+import { UserProfileNavItem } from './users'
 
-export const HeaderSection = ({ input, user }) =>
-  <nav class='navbar is-warning' role='navigation' aria-label='main navigation'>
+export const HeaderSection = ({ input, user, actions }) =>
+  <nav
+    class='navbar is-warning'
+    role='navigation'
+    aria-label='main navigation'
+    oncreate={() => actions.checkLoginState()} >
+
     <HeaderLeftSection user={user} />
-    <HeaderRightSection user={user} />
+    <HeaderRightSection user={user} actions={actions} />
   </nav>
 
 const HeaderLeftSection = ({user}) =>
@@ -16,10 +22,18 @@ const HeaderLeftSection = ({user}) =>
     </div>
   </div>
 
-const HeaderRightSection = ({user}) =>
+const HeaderRightSection = ({user, actions}) =>
   <div class='navbar-end'>
-    <HeaderSignUpSection />
+    <UserLinkOrSignupSection user={user} actions={actions} />
   </div>
+
+const UserLinkOrSignupSection = ({user, actions}) => {
+  if (user.userID) {
+    return <UserProfileNavItem user={user} actions={actions} />
+  } else {
+    return <HeaderSignUpSection />
+  }
+}
 
 const HeaderSignUpSection = () =>
   <div class="navbar-end">
