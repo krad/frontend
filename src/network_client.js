@@ -15,7 +15,13 @@ const readFromFile = (filename) => {
         return
       }
 
-      if (filename.startsWith('/users/me')) {
+      // if (filename.startsWith('/users/me')) {
+      //   const user = require('./me')
+      //   resolve(user.default)
+      //   return
+      // }
+
+      if (filename.startsWith('/users/login')) {
         const user = require('./me')
         resolve(user.default)
         return
@@ -33,8 +39,8 @@ const returnJSON = (response) => {
     if (!response.ok) { throw new Error(response.json()) }
     return response.json();
   }
-  console.log(response);
-  console.log(response.text());
+
+  if (response.redirected) { return JSON.parse('{}') }
   throw new TypeError("Didn't get JSON from the API");
 }
 

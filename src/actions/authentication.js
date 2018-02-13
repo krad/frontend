@@ -1,54 +1,73 @@
 import { setIsLoading, setIsFetching, setError } from './async_helpers'
 import { GET, POST } from '../network_client'
 
-export const CurrentUserStatus = {
+export const Authentication = {
   setError: setError,
   setIsLoading: setIsLoading,
+
+  setIsChangingAuthState: value => state => ({isChangingAuthState: value}),
+  setIsVerified: value => state => ({isVerified: value}),
   setCurrentUser: value => state => (value),
+
+  clearSensitiveInfo: () => state => {
+    var newState = state
+    delete newState['phoneNumber']
+    delete newState['password']
+    delete newState['firstName']
+    delete newState['lastName']
+    delete newState['username']
+    return newState
+  },
+
   checkLoginState: () => async (state, actions) => {
     actions.setIsLoading(true)
-    GET('/users/me').then(result => {
-      actions.setIsLoading(false)
+    await GET('/users/me').then(result => {
       actions.setCurrentUser(result)
+      actions.setIsVerified(true)
     }).catch(err => {
-      console.log('err', err);
-    })
-  },
-
-  logout: () => async (state, actions) => {
-    actions.setIsLoading(true)
-    POST('/users/logout', {}).then(result => {
-      console.log(result);
-      actions.setIsLoading(false)
       actions.setCurrentUser(null)
-    }).catch(err => {
-      console.log('Logout error', err);
     })
+    actions.setIsLoading(false)
   },
-
-}
-
-export const Login =  {
-  setError: setError,
-  setIsLoading: setIsLoading,
-  setCurrentUser: value => state => ({user: value}),
-  clearState: () => state => ({}),
 
   edit: value => state => {
     state[value.name] = value.value
     return state
   },
 
-  submit: value => async (state, actions) => {
-    actions.setIsLoading(true)
-    POST('/users/login', state).then(result => {
-      actions.setIsLoading(false)
-      actions.clearState()
+  login: value => async (state, actions) => {
+    actions.setIsChangingAuthState(true)
+    await POST('/users/login', state).then(result => {
       actions.setCurrentUser(result)
+      actions.clearSensitiveInfo()
+      actions.setIsVerified(true)
     }).catch(err => {
-      actions.setIsLoading(false)
       actions.setError('Login failed')
     })
-  }
+    actions.setIsChangingAuthState(false)
+  },
 
+  logout: () => async (state, actions) => {
+    actions.setIsChangingAuthState(true)
+    await POST('/users/logout', {})
+    .then(result => {
+      actions.clearSensitiveInfo()
+      actions.setIsVerified(false)
+    })
+    .catch(err => { console.log(err) })
+    actions.setIsChangingAuthState(false)
+  },
+
+  signup: () => async (state, actions) => {
+    actions.setIsChangingAuthState(true)
+    await POST('/users/signup', state).then(result => {
+      console.log('signed up', result);
+      actions.setCurrentUser(result)
+      actions.setIsVerified(false)
+    }).catch(err => {
+      console.log('error signing up', err);
+      actions.setError('Signup failed')
+    })
+    actions.setIsChangingAuthState(false)
+  }
 }

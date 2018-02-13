@@ -2,15 +2,15 @@ import { h, app } from "hyperapp"
 import { Link, Route, location } from "@hyperapp/router"
 import { UserProfileNavItem } from './users'
 
-export const HeaderSection = ({ input, user, actions }) =>
+export const HeaderSection = ({ input, user, logout, checkLoginState }) =>
   <nav
     class='navbar is-warning'
     role='navigation'
     aria-label='main navigation'
-    oncreate={() => actions.checkLoginState()} >
+    oncreate={checkLoginState} >
 
     <HeaderLeftSection user={user} />
-    <HeaderRightSection user={user} actions={actions} />
+    <HeaderRightSection user={user} logout={logout} />
   </nav>
 
 const HeaderLeftSection = ({user}) =>
@@ -22,16 +22,16 @@ const HeaderLeftSection = ({user}) =>
     </div>
   </div>
 
-const HeaderRightSection = ({user, actions}) =>
+const HeaderRightSection = ({user, logout}) =>
   <div class='navbar-end'>
-    <UserLinkOrSignupSection user={user} actions={actions} />
+    <UserLinkOrSignupSection user={user} logout={logout} />
   </div>
 
-const UserLinkOrSignupSection = ({user, actions}) => {
-  if (user.userID) {
-    return <UserProfileNavItem user={user} actions={actions} />
+const UserLinkOrSignupSection = ({user, logout}) => {
+  if (user.isVerified) {
+    return (<UserProfileNavItem user={user} logout={logout} />)
   } else {
-    return <HeaderSignUpSection />
+    return (<HeaderSignUpSection />)
   }
 }
 
@@ -53,18 +53,6 @@ const HeaderSignUpSection = () =>
         </p>
       </div>
     </div>
-  </div>
-
-const HeaderSearch = () =>
-  <div class='navbar-item'>
-    <form class='field has-addons' role='search'>
-      <div class='control'>
-        <input type='text' class='input' placeholder='Search' />
-        <span class="icon is-small is-left">
-          <i class="fas fa-search"></i>
-        </span>
-      </div>
-    </form>
   </div>
 
 export const HeroSection = ({motto}) =>

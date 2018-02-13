@@ -17,7 +17,7 @@ state.location   = location.state
 
 const view = (state, actions) =>
   <main>
-    <HeaderSection user={state.user} actions={actions.user} />
+    <HeaderSection user={state.user} {...actions.user} />
     <Route path='/' render={BrowseVideos(state, actions)} />
     <Route path='/watch/:broadcastID' render={PlayerView(state, actions)} />
     <Route path='/login' render={LoginView(state, actions)} />

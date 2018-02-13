@@ -8,21 +8,23 @@ export const CountryCodeDropdown = ({change}) =>
     </select>
   </span>
 
-export const PhoneNumberInput = ({change}) =>
+export const PhoneNumberInput = ({change, value}) =>
   <span class='phoneInput'>
     <input class='input'
       name='phoneNumber'
       type='phone'
+      value={value}
       placeholder='8557975723'
       oninput={e => change({ value: e.target.value, name: 'phoneNumber' })}
       />
     <span class='icon is-small is-left'><i class='fa fa-phone'></i></span>
   </span>
 
-export const PasswordInput = ({change}) =>
+export const PasswordInput = ({change, value}) =>
   <input class='input'
   name='password'
   type='password'
+  value={value}
   placeholder='Password'
   oninput={e => change({ value: e.target.value, name: 'password'})}
   />

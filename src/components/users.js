@@ -1,6 +1,7 @@
 import { h, app } from "hyperapp"
 import { Link, Route, location } from "@hyperapp/router"
 import { config } from '../config'
+import { HorseshoeSpinner } from './spinner'
 
 export const UserItemProfile = ({user}) =>
   <div class='media'>
@@ -18,16 +19,26 @@ export const UserItemProfile = ({user}) =>
 export const UserProfileImage = ({user}) =>
   <img src={userProfileImgURL(user)} alt={userProfileImgAlt(user)} />
 
-export const UserProfileNavItem = ({user, actions}) =>
-  <div class='navbar-item has-dropdrown is-hoverable'>
+export const UserProfileNavItemLoading = () =>
+  <div class='navbar-item'>
+    <HorseshoeSpinner />
+  </div>
+
+export const UserProfileNavItem = ({user, logout}) => {
+  if (user.isLoading || user.isChangingAuthState) {
+    return (<UserProfileNavItemLoading />)
+  }
+
+  return (<div class='navbar-item has-dropdrown is-hoverable'>
     <a class='navbar-link'>
       <UserProfileImage user={user} />
     </a>
 
     <UserProfileNavDropdown
     user={user}
-    logout={actions.logout} />
-  </div>
+    logout={logout} />
+  </div>)
+}
 
 const UserProfileNavDropdown = ({user, logout}) =>
   <div class='navbar-dropdown'>

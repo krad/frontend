@@ -57,7 +57,9 @@ const VideoItemContent = ({broadcast}) =>
 const VideoItemDetails = ({broadcast}) =>
   <div class='media'>
     <div class='media-content'>
-      <p class='title is-6'>{broadcast.title}</p>
+      <Link to={['/watch', broadcast.broadcastID].join('/')}>
+        <p class='title is-6'>{broadcast.title}</p>
+      </Link>
     </div>
   </div>
 
