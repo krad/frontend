@@ -1,15 +1,15 @@
 import { h, app } from "hyperapp"
 import { Link, Route, Redirect, location } from "@hyperapp/router"
-import { StringInput } from './inputs'
+import { StringInput, PasswordInput } from './inputs'
 import { userProfileImgURL } from './users'
 
 export const ManageProfileView = (user, actions) => ({ location, match }) => {
-  // if (!user.userID && !user.isVerified) { return <Redirect to='/' /> }
+  if (!user.userID || !user.isLoggedIn) { return <Redirect to='/login' /> }
   return (
   <div class='container'>
     <section class='section'>
       <div class='container'>
-        <h1 class='title'>Manage Profile</h1>
+        <h1 class='title'>{sectionTitle(user)}</h1>
         <div class='card'>
           <div class='card-content'>
             <ManageProfileForm user={user} {...actions.user} />
@@ -24,36 +24,40 @@ const ManageProfileForm = ({user, edit, update, prepareUpload}) =>
   <profile>
     <form id='profile'>
       <UserNameSection user={user} edit={edit} update={update} />
+      <PasswordSection user={user} edit={edit} update={update} />
       <ProfileImageSection photo={user.photo} prepareUpload={prepareUpload} />
       <NameSection user={user} edit={edit} update={update} />
 
       <div class='field is-grouped'>
-        <a class='button is-info' onclick={update}>
+        <a class={isLoadingClass(user)} onclick={update}>
         Update Profile
         </a>
       </div>
     </form>
   </profile>
 
-const NameSection = ({user, edit, update}) =>
-  <div class='field is-grouped'>
+const UserNameSection = ({user, edit, update}) =>
+  <div class='field'>
     <TextInputField
-      name={'firstName'}
-      label={'First Name'}
-      value={user.firstName}
-      edit={edit}
-      update={update} />
-
-    <TextInputField
-      name={'lastName'}
-      label={'Last Name'}
-      value={user.lastName}
+      name='username'
+      label='Username'
+      value={user.username}
+      placeholder='Select a username'
       edit={edit}
       update={update} />
   </div>
 
+const PasswordSection = ({user, edit, update}) =>
+  <div class='field'>
+    <PasswordInputField
+      label='Password'
+      placeholder={passwordPlaceholder(user)}
+      edit={edit}
+      update={update}  />
+  </div>
+
 const ProfileImageSection = ({photo, prepareUpload}) =>
-  <div class="file has-name is-boxed">
+  <div class="field file has-name is-boxed is-fullwidth">
     <label class="file-label">
 
       <input class="file-input"
@@ -61,7 +65,7 @@ const ProfileImageSection = ({photo, prepareUpload}) =>
         name="profilePhoto"
         onchange={el => prepareUpload(el.target)}/>
 
-      <span class="file-cta">
+      <span class="file-cta has-text-centered">
         <span class="file-icon">
           <i class="fas fa-upload"></i>
         </span>
@@ -69,11 +73,43 @@ const ProfileImageSection = ({photo, prepareUpload}) =>
           Choose a file…
         </span>
       </span>
-      <span class="file-name">
-        <div class=''><ProfileImageName photo={photo} /></div>
+
+      <span class="file-name has-text-centered">
+        <div><ProfileImageName photo={photo} /></div>
         <div class='field'><UploadProgressBar photo={photo} /></div>
       </span>
     </label>
+  </div>
+
+const NameSection = ({user, edit, update}) =>
+  <div class='field'>
+    <TextInputField
+      name='firstName'
+      label='First Name'
+      value={user.firstName}
+      edit={edit}
+      update={update}
+      placeholder='Alex' />
+
+    <TextInputField
+      name='lastName'
+      label='Last Name'
+      value={user.lastName}
+      edit={edit}
+      update={update}
+      placeholder='Jones'/>
+  </div>
+
+const TextInputField = ({label, name, value, edit, update, placeholder}) =>
+  <div class='field control'>
+    <label class='label'>{label}</label>
+    <StringInput name={name} value={value} change={edit} enter={update} placeholder={placeholder} />
+  </div>
+
+const PasswordInputField = ({label, name, value, edit, update, placeholder}) =>
+  <div class='field control'>
+    <label class='label'>{label}</label>
+    <PasswordInput change={edit} enter={update} value={value} placeholder={placeholder} />
   </div>
 
 const ProfileImageName = ({photo}) => {
@@ -99,19 +135,27 @@ const uploadProgress = (photo) => {
   return 0
 }
 
-const UserNameSection = ({user, edit, update}) =>
-  <div class='field'>
-    <TextInputField
-      name={'username'}
-      label={'Username'}
-      value={user.lastName}
-      placeholder={'Select a username'}
-      edit={edit}
-      update={update} />
-  </div>
+const sectionTitle = (user) => {
+  if (user.isVerified) {
+    return 'Manage Profile'
+  } else {
+    return 'Setup your profile'
+  }
+}
 
-const TextInputField = ({label, name, value, edit, update, placeholder}) =>
-  <div class='field control'>
-    <label class='label'>{label}</label>
-    <StringInput name={name} value={value} change={edit} enter={update} placeholder={placeholder} />
-  </div>
+const passwordPlaceholder = (user) => {
+  if(user.isVerified)  {
+    return 'Update your password'
+  } else {
+    return 'Set your password'
+  }
+}
+
+const isLoadingClass = (user) => {
+  if (user) {
+    if (user.isUpdating) {
+      return "button is-info is-fullwidth is-expanded is-loading"
+    }
+  }
+  return "button is-info is-fullwidth is-expanded"
+}

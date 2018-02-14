@@ -33,12 +33,12 @@ export const StringInput = ({name, value, placeholder, change, enter}) =>
       />
   </span>
 
-export const PasswordInput = ({change, enter, value}) =>
+export const PasswordInput = ({change, enter, value, placeholder}) =>
   <input class='input'
   name='password'
   type='password'
   value={value}
-  placeholder='Password'
+  placeholder={placeholder}
   oninput={e => change({ value: e.target.value, name: 'password'})}
   onkeydown={(e) => { if(e.which == 13) { e.preventDefault(); enter() } }}
   />

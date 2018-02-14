@@ -4,7 +4,8 @@ import { CountryCodeDropdown, PhoneNumberInput, PasswordInput, StringInput } fro
 
 export const SignupView = (user, actions) => ({ location, match }) => {
   if (user.userID && user.isVerified) { return <Redirect to='/' /> }
-  if (user.userID && !user.isVerified) { return <Redirect to='/verify' /> }
+  if (user.userID && !user.isLoggedIn) { return <Redirect to='/verify' /> }
+  if (user.userID && user.isLoggedIn && !user.isVerified) { return <Redirect to='/profile' /> }
   return (
   <div class='container'>
     <div class="column is-4 is-offset-4">
@@ -38,8 +39,8 @@ const SignupForm = ({user, edit, signup}) =>
   </form>
 
 export const SignupVerifyView = (user, actions) => ({ location, match }) => {
-  if (user.userID && user.isVerified) { return <Redirect to='/profile' /> }
-  if (!user.userID) { return <Redirect to='/signup' /> }
+  if (user.userID && user.isLoggedIn && !user.isVerified) { return <Redirect to='/profile' /> }
+  if (!user.userID) { return <Redirect to='/login' /> }
     return (
     <div class='container'>
       <div class='column is-4 is-offset-4'>
@@ -58,7 +59,7 @@ const VerifyForm = ({user, edit, login}) =>
         <StringInput
           name='verificationCode'
           value={user.verificationCode}
-          placeholder={'Enter code received from SMS'}
+          placeholder='Enter code received from SMS'
           enter={login}
           change={edit} />
       </p>

@@ -1,12 +1,34 @@
 import { setIsLoading, setIsFetching, setError } from './async_helpers'
 import { GET, POST, UPLOAD } from '../network_client'
 
+const sanitize = (input, keys) => {
+  var sanitizedInput = input
+  for (var key in keys) {
+    if (sanitizedInput.hasOwnProperty(key)) {
+      delete sanitizedInput[key]
+    }
+  }
+  return sanitizedInput
+}
+
+const sanitizeAll = (input) => {
+  const allKeys = ['isLoading',
+                   'isVerified',
+                   'error',
+                   'isChangingAuthState',
+                   'isLoggedIn']
+
+  return sanitize(input, allKeys)
+}
+
 export const Authentication = {
   setError: setError,
   setIsLoading: setIsLoading,
 
+  setIsUpdating: value => state => ({isUpdating: value}),
   setIsChangingAuthState: value => state => ({isChangingAuthState: value}),
   setIsVerified: value => state => ({isVerified: value}),
+  setIsLoggedIn: value => state => ({isLoggedIn: value}),
   setCurrentUser: value => state => (value),
 
   clearSensitiveInfo: () => state => {
@@ -25,7 +47,6 @@ export const Authentication = {
     await GET('/users/me').then(result => {
       actions.setError(null)
       actions.setCurrentUser(result)
-      actions.setIsVerified(true)
     }).catch(err => {
       actions.setCurrentUser(null)
     })
@@ -58,7 +79,6 @@ export const Authentication = {
   upload: (uploadInfo) => async (state, actions) => {
     await UPLOAD(uploadInfo.url, uploadInfo.target.type, uploadInfo.target, (progress) =>{
       var percentComplete = ((progress.loaded / progress.total) * 100)
-      console.log(percentComplete);
       actions.setCurrentUser({photo: {progress: percentComplete.toString()}})
     }).then(result => {
       console.log(result)
@@ -67,9 +87,14 @@ export const Authentication = {
     })
   },
 
-  update: value => state => {
-    console.log('updates')
-    console.log(state);
+  update: value => async (state, actions) => {
+    actions.setIsUpdating(true)
+    await POST('/users/me', sanitizeAll(state)).then(result => {
+      actions.setIsVerified(true)
+    }).catch(err => {
+      actions.setError('Problem updating profile')
+    })
+    actions.setIsUpdating(false)
   },
 
   hamburger: value => state => {
@@ -82,11 +107,13 @@ export const Authentication = {
 
   login: value => async (state, actions) => {
     actions.setIsChangingAuthState(true)
-    await POST('/users/login', state).then(result => {
+    var payload = sanitizeAll(state)
+    console.log(payload);
+    await POST('/users/login', sanitizeAll(state)).then(result => {
       actions.setError(null)
       actions.setCurrentUser(result)
       actions.clearSensitiveInfo()
-      actions.setIsVerified(true)
+      actions.setIsLoggedIn(true)
     }).catch(err => {
       actions.setError('Login failed')
     })
@@ -99,7 +126,7 @@ export const Authentication = {
     .then(result => {
       actions.setError(null)
       actions.clearSensitiveInfo()
-      actions.setIsVerified(false)
+      actions.setIsLoggedIn(true)
     })
     .catch(err => { console.log(err) })
     actions.setIsChangingAuthState(false)
@@ -107,10 +134,12 @@ export const Authentication = {
 
   signup: () => async (state, actions) => {
     actions.setIsChangingAuthState(true)
-    await POST('/users/signup', state).then(result => {
+    var payload = sanitizeAll(state)
+    console.log(payload);
+    await POST('/users/signup', payload).then(result => {
       actions.setError(null)
       actions.setCurrentUser(result)
-      actions.setIsVerified(false)
+      actions.setIsLoggedIn(false)
     }).catch(err => {
       actions.setError('Signup failed')
     })
