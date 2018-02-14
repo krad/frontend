@@ -72,6 +72,14 @@ export const Authentication = {
     console.log(state);
   },
 
+  hamburger: value => state => {
+    if (state.controlsActive) {
+      return {controlsActive: false}
+    } else {
+      return {controlsActive: true}
+    }
+  },
+
   login: value => async (state, actions) => {
     actions.setIsChangingAuthState(true)
     await POST('/users/login', state).then(result => {

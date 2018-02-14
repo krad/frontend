@@ -71,7 +71,7 @@ const UserProfileHeaderLogoutLink = ({logout}) =>
 
 export const userProfileImgURL = (user, dimensions) => {
   if (!dimensions) { dimensions = "96x96" }
-  
+
   if (config.IsTesting) {
     return 'https://via.placeholder.com/' + dimensions
   } else {

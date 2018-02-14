@@ -2,23 +2,40 @@ import { h, app } from "hyperapp"
 import { Link, Route, location } from "@hyperapp/router"
 import { UserProfileNavItem } from './users'
 
-export const HeaderSection = ({ input, user, logout, checkLoginState }) =>
+export const HeaderSection = ({ input, user, logout, checkLoginState, hamburger }) =>
   <nav
     class='navbar is-warning'
     role='navigation'
     aria-label='main navigation'
     oncreate={checkLoginState} >
 
-    <HeaderLeftSection user={user} />
-    <HeaderRightSection user={user} logout={logout} />
+    <HeaderLeftSection user={user} hamburger={hamburger}/>
+
+    <div class={userControlsActive(user)} id='navbarUserControls'>
+      <div class="navbar-start">
+        <UserProfileNavItem user={user} logout={logout} />
+      </div>
+    </div>
   </nav>
 
-const HeaderLeftSection = ({user}) =>
+const userControlsActive = (user) => {
+  if (user.controlsActive) {
+    return "navbar-menu is-active"
+  }
+  return "navbar-menu"
+}
+
+const HeaderLeftSection = ({user, hamburger}) =>
   <div class='navbar-start'>
     <div class='navbar-brand'>
       <a href='/' class='navbar-item'>
         <img src='https://www.krad.io/public/images/krad.png' alt='krad.tv - pretty far out radical stuff' />
       </a>
+      <div class="navbar-burger burger" onclick={hamburger}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
   </div>
 
