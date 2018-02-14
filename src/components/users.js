@@ -7,12 +7,14 @@ export const UserItemProfile = ({user}) =>
   <div class='media'>
     <div class='media-left'>
       <figure class='image is-48x48'>
-        <UserProfileImage user={user} />
+        <Link to={userChannelURL(user)}>
+          <UserProfileImage user={user} />
+        </Link>
       </figure>
     </div>
     <div class='media-content'>
-      <p class='title is-6'>{user.firstName} {user.lastName}</p>
-      <p class='subtitle is-6'>@{user.username}</p>
+      <p><Link to={userChannelURL(user)} class='title is-6'>{user.firstName} {user.lastName}</Link></p>
+      <p><Link to={userChannelURL(user)} class='subtitle is-6'>@{user.username}</Link></p>
     </div>
   </div>
 
@@ -43,6 +45,7 @@ export const UserProfileNavItem = ({user, logout}) => {
 const UserProfileNavDropdown = ({user, logout}) =>
   <div class='navbar-dropdown'>
     <UserProfileHeaderChannelLink user={user} />
+    <UserProfileHeaderProfileLink user={user} />
     <UserProfileHeaderLogoutLink logout={logout} />
   </div>
 
@@ -53,7 +56,12 @@ const UserProfileNavDropdownHeader = ({user}) =>
 
 const UserProfileHeaderChannelLink = ({user}) =>
   <div class='navbar-item'>
-    <a>My Channel</a>
+    <Link to={userChannelURL(user)}>My Channel</Link>
+  </div>
+
+const UserProfileHeaderProfileLink = ({user}) =>
+  <div class='navbar-item'>
+    <Link to='/profile'>Manage Profile</Link>
   </div>
 
 const UserProfileHeaderLogoutLink = ({logout}) =>
@@ -61,14 +69,23 @@ const UserProfileHeaderLogoutLink = ({logout}) =>
     <a onclick={logout}>Logout</a>
   </div>
 
-const userProfileImgURL = (user) => {
+export const userProfileImgURL = (user, dimensions) => {
+  if (!dimensions) { dimensions = "96x96" }
+  
   if (config.IsTesting) {
-    return 'https://via.placeholder.com/96x96'
+    return 'https://via.placeholder.com/' + dimensions
   } else {
-    return '/images?dimensions=96x96&key=' + user.userID +'/profile.jpg'
+    return '/images?dimensions=' + dimensions + '&key=' + user.userID +'/profile.jpg'
   }
 }
 
 const userProfileImgAlt = (user) => {
   return [user.firstName, user.lastName].join(' ') + " profile pic"
+}
+
+const userChannelURL = (user) => {
+  if (user.userID) {
+    return ['/channel', user.userID].join('/')
+  }
+  return '/'
 }

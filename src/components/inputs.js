@@ -8,7 +8,7 @@ export const CountryCodeDropdown = ({change}) =>
     </select>
   </span>
 
-export const PhoneNumberInput = ({change, value}) =>
+export const PhoneNumberInput = ({change, enter, value}) =>
   <span class='phoneInput'>
     <input class='input'
       name='phoneNumber'
@@ -16,15 +16,29 @@ export const PhoneNumberInput = ({change, value}) =>
       value={value}
       placeholder='8557975723'
       oninput={e => change({ value: e.target.value, name: 'phoneNumber' })}
+      onkeydown={(e) => { if(e.which == 13) { e.preventDefault(); enter() } }}
       />
     <span class='icon is-small is-left'><i class='fa fa-phone'></i></span>
   </span>
 
-export const PasswordInput = ({change, value}) =>
+export const StringInput = ({name, value, placeholder, change, enter}) =>
+  <span class='string-input'>
+    <input class='input'
+      name={name}
+      type='text'
+      value={value}
+      placeholder={placeholder}
+      oninput={e => change({ value: e.target.value, name: name })}
+      onkeydown={(e) => { if(e.which == 13) { e.preventDefault(); enter() } }}
+      />
+  </span>
+
+export const PasswordInput = ({change, enter, value}) =>
   <input class='input'
   name='password'
   type='password'
   value={value}
   placeholder='Password'
   oninput={e => change({ value: e.target.value, name: 'password'})}
+  onkeydown={(e) => { if(e.which == 13) { e.preventDefault(); enter() } }}
   />

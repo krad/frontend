@@ -15,11 +15,11 @@ const readFromFile = (filename) => {
         return
       }
 
-      // if (filename.startsWith('/users/me')) {
-      //   const user = require('./me')
-      //   resolve(user.default)
-      //   return
-      // }
+      if (filename.startsWith('/users/me')) {
+        const user = require('./me')
+        resolve(user.default)
+        return
+      }
 
       if (filename.startsWith('/users/login')) {
         const user = require('./me')
@@ -42,6 +42,27 @@ const returnJSON = (response) => {
 
   if (response.redirected) { return JSON.parse('{}') }
   throw new TypeError("Didn't get JSON from the API");
+}
+
+const progressiveFetch = (url, opts, onProgress) => {
+    return new Promise((resolve, reject) => {
+
+      var xhr = new XMLHttpRequest()
+      xhr.open(opts.method || 'PUT', url)
+
+      for (var k in opts.headers||{}) {
+        xhr.setRequestHeader(k, opts.headers[k]);
+      }
+
+      xhr.onload = e => resolve(e.target.responseText)
+      xhr.onerror = reject
+
+      if (xhr.upload && onProgress) {
+        xhr.upload.onprogress = onProgress
+      }
+
+      xhr.send(opts.body)
+    })
 }
 
 export const GET = (path) => {
@@ -78,4 +99,14 @@ export const POST = (path, data) => {
     }
     return fetch(path, requestParams).then(returnJSON)
   }
+}
+
+export const UPLOAD = (path, contentType, data, uploadProgress) => {
+  var requestParams = {
+    method: 'PUT',
+    headers: { 'Content-Type': contentType, },
+    body: data,
+    mode: 'cors'
+  }
+  return progressiveFetch(path, requestParams, uploadProgress)
 }

@@ -8,8 +8,10 @@ import { HeaderSection } from './components/header'
 import { BrowseVideos } from './components/videos_browser'
 import { PlayerView } from './components/player_view'
 import { LoginView } from './components/login'
-import { SignupView } from './components/signup'
+import { SignupView, SignupVerifyView } from './components/signup'
 import { ForgotPasswordView } from './components/forgot_password'
+import { ManageProfileView } from './components/manage_profile'
+import { UserChannelView } from './components/user_channel'
 import { HelpView } from './components/help'
 
 actions.location = location.actions
@@ -20,8 +22,11 @@ const view = (state, actions) =>
     <HeaderSection user={state.user} {...actions.user} />
     <Route path='/' render={BrowseVideos(state, actions)} />
     <Route path='/watch/:broadcastID' render={PlayerView(state, actions)} />
-    <Route path='/login' render={LoginView(state, actions)} />
-    <Route path='/signup' render={SignupView(state, actions)} />
+    <Route path='/login' render={LoginView(state.user, actions)} />
+    <Route path='/signup' render={SignupView(state.user, actions)} />
+    <Route path='/verify' render={SignupVerifyView(state.user, actions)} />
+    <Route path='/profile' render={ManageProfileView(state.user, actions)} />
+    <Route path='/channel/:userID' render={UserChannelView(state, actions)} />
     <Route path='/forgotpassword' render={ForgotPasswordView(state, actions)} />
     <Route path='/help' render={HelpView(state, actions)} />
   </main>
