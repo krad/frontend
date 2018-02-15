@@ -27,10 +27,6 @@ export const UserProfileNavItemLoading = () =>
   </div>
 
 export const UserProfileNavItem = ({user, logout}) => {
-  if (user.isLoading || user.isChangingAuthState) {
-    return (<UserProfileNavItemLoading />)
-  }
-
   return (<div class='navbar-item has-dropdrown is-hoverable'>
     <a class='navbar-link'>
       <UserProfileImage user={user} />

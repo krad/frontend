@@ -22,16 +22,14 @@ export const PhoneNumberInput = ({change, enter, value}) =>
   </span>
 
 export const StringInput = ({name, value, placeholder, change, enter}) =>
-  <span class='string-input'>
-    <input class='input'
-      name={name}
-      type='text'
-      value={value}
-      placeholder={placeholder}
-      oninput={e => change({ value: e.target.value, name: name })}
-      onkeydown={(e) => { if(e.which == 13) { e.preventDefault(); enter() } }}
-      />
-  </span>
+  <input class='input'
+    name={name}
+    type='text'
+    value={value}
+    placeholder={placeholder}
+    oninput={e => change({ value: e.target.value, name: name })}
+    onkeydown={(e) => { if(e.which == 13) { e.preventDefault(); enter() } }}
+    />
 
 export const PasswordInput = ({change, enter, value, placeholder}) =>
   <input class='input'

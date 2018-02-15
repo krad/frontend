@@ -15,11 +15,11 @@ const readFromFile = (filename) => {
         return
       }
 
-      if (filename.startsWith('/users/me')) {
-        const user = require('./me')
-        resolve(user.default)
-        return
-      }
+      // if (filename.startsWith('/users/me')) {
+      //   const user = require('./me')
+      //   resolve(user.default)
+      //   return
+      // }
 
       if (filename.startsWith('/users/login')) {
         const user = require('./me')
@@ -29,7 +29,7 @@ const readFromFile = (filename) => {
 
       resolve(null)
       return
-    }, 1000)
+    }, 2000)
   })
 }
 

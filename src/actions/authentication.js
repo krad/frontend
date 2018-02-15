@@ -16,7 +16,10 @@ const sanitizeAll = (input) => {
                    'isVerified',
                    'error',
                    'isChangingAuthState',
-                   'isLoggedIn']
+                   'isCheckingAvailable',
+                   'isLoggedIn',
+                   'controlsActive',
+                   'usernameAvailable']
 
   return sanitize(input, allKeys)
 }
@@ -25,11 +28,26 @@ export const Authentication = {
   setError: setError,
   setIsLoading: setIsLoading,
 
-  setIsUpdating: value => state => ({isUpdating: value}),
   setIsChangingAuthState: value => state => ({isChangingAuthState: value}),
+  setIsUpdating: value => state => ({isUpdating: value}),
+
   setIsVerified: value => state => ({isVerified: value}),
   setIsLoggedIn: value => state => ({isLoggedIn: value}),
   setCurrentUser: value => state => (value),
+
+  setIsCheckingAvailable: value => state => ({isCheckingAvailable: value}),
+  setUsernameAvailable: value => state => ({usernameAvailable: value}),
+
+  checkAvailability: value => async (state, actions) => {
+    actions.setIsCheckingAvailable(true)
+    await POST('/users/names/available', {username: value})
+    .then(result => {
+      actions.setUsernameAvailable(result.available)
+    }).catch(err => {
+      setError('Problem checking username')
+    })
+    actions.setIsCheckingAvailable(false)
+  },
 
   clearSensitiveInfo: () => state => {
     var newState = state
@@ -53,7 +71,7 @@ export const Authentication = {
     actions.setIsLoading(false)
   },
 
-  edit: value => state => {
+  edit: value => (state, actions) => {
     state[value.name] = value.value
     return state
   },

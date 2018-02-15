@@ -36,7 +36,7 @@ const ManageProfileForm = ({user, edit, update, prepareUpload}) =>
     </form>
   </profile>
 
-const UserNameSection = ({user, edit, update}) =>
+const UserNameSection = ({user, username, edit, update, checkAvailability}) =>
   <div class='field'>
     <TextInputField
       name='username'
@@ -44,7 +44,8 @@ const UserNameSection = ({user, edit, update}) =>
       value={user.username}
       placeholder='Select a username'
       edit={edit}
-      update={update} />
+      update={update}
+      isLoading={user.isCheckingAvailable} />
   </div>
 
 const PasswordSection = ({user, edit, update}) =>
@@ -100,10 +101,16 @@ const NameSection = ({user, edit, update}) =>
       placeholder='Jones'/>
   </div>
 
-const TextInputField = ({label, name, value, edit, update, placeholder}) =>
-  <div class='field control'>
+const TextInputField = ({label, name, value, edit, update, placeholder, isLoading}) =>
+  <div class='field'>
     <label class='label'>{label}</label>
-    <StringInput name={name} value={value} change={edit} enter={update} placeholder={placeholder} />
+    <div class={textInputIsLoadingClass(isLoading)}>
+      <StringInput name={name}
+        value={value}
+        change={edit}
+        enter={update}
+        placeholder={placeholder} />
+    </div>
   </div>
 
 const PasswordInputField = ({label, name, value, edit, update, placeholder}) =>
@@ -158,4 +165,13 @@ const isLoadingClass = (user) => {
     }
   }
   return "button is-info is-fullwidth is-expanded"
+}
+
+const textInputIsLoadingClass = (user) => {
+  if (user) {
+    if (user.isCheckingAvailable) {
+      return 'has-icons-right is-loading'
+    }
+  }
+  return 'control has-icons-right'
 }

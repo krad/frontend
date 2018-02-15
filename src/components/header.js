@@ -1,6 +1,7 @@
 import { h, app } from "hyperapp"
 import { Link, Route, location } from "@hyperapp/router"
-import { UserProfileNavItem } from './users'
+import { UserProfileNavItem, UserProfileNavItemLoading } from './users'
+import { HorseshoeSpinner } from './spinner'
 
 export const HeaderSection = ({ input, user, logout, checkLoginState, hamburger }) =>
   <nav
@@ -12,9 +13,7 @@ export const HeaderSection = ({ input, user, logout, checkLoginState, hamburger 
     <HeaderLeftSection user={user} hamburger={hamburger}/>
 
     <div class={userControlsActive(user)} id='navbarUserControls'>
-      <div class="navbar-start">
-        <UserProfileNavItem user={user} logout={logout} />
-      </div>
+      <UserLinkOrSignupSection user={user} logout={logout} />
     </div>
   </nav>
 
@@ -39,21 +38,20 @@ const HeaderLeftSection = ({user, hamburger}) =>
     </div>
   </div>
 
-const HeaderRightSection = ({user, logout}) =>
-  <div class='navbar-end'>
-    <UserLinkOrSignupSection user={user} logout={logout} />
-  </div>
-
 const UserLinkOrSignupSection = ({user, logout}) => {
-  if (user.isVerified) {
-    return (<UserProfileNavItem user={user} logout={logout} />)
-  } else {
-    return (<HeaderSignUpSection />)
+  if (user.isLoading || user.isChangingAuthState) {
+    console.log('lloooaddd');
+    <UserProfileNavItemLoading />
   }
+
+  if (user.isLoggedIn) {
+    return (<UserProfileNavItem user={user} logout={logout} />)
+  }
+
+  return (<HeaderSignUpSection />)
 }
 
 const HeaderSignUpSection = () =>
-  <div class="navbar-end">
     <div class="navbar-item">
       <div class="field is-grouped">
         <p class="control">
@@ -70,7 +68,6 @@ const HeaderSignUpSection = () =>
         </p>
       </div>
     </div>
-  </div>
 
 export const HeroSection = ({motto}) =>
     <section class='hero is-info'>

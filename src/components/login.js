@@ -3,7 +3,7 @@ import { Link, Route, Redirect, location } from "@hyperapp/router"
 import { CountryCodeDropdown, PhoneNumberInput, PasswordInput } from './inputs'
 
 export const LoginView = (user, actions) => ({ location, match }) => {
-  if (user.isVerified) { return <Redirect to='/' /> }
+  if (user.isLoggedIn) { return <Redirect to='/' /> }
   return (<div class='container'>
     <div class="column is-4 is-offset-4">
       <h3 class="title has-text-grey">Login</h3>
