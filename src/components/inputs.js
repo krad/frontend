@@ -12,7 +12,8 @@ export const PhoneNumberInput = ({change, enter, value}) =>
   <span class='phoneInput'>
     <input class='input'
       name='phoneNumber'
-      type='phone'
+      type='number'
+      pattern='\d*'
       value={value}
       placeholder='8557975723'
       oninput={e => change({ value: e.target.value, name: 'phoneNumber' })}

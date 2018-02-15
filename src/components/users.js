@@ -27,7 +27,8 @@ export const UserProfileNavItemLoading = () =>
   </div>
 
 export const UserProfileNavItem = ({user, logout}) => {
-  return (<div class='navbar-item has-dropdrown is-hoverable'>
+  return (
+  <div class='navbar-item has-dropdrown is-hoverable'>
     <a class='navbar-link'>
       <UserProfileImage user={user} />
     </a>

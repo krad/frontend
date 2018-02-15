@@ -3,26 +3,16 @@ import { Link, Route, location } from "@hyperapp/router"
 import { UserProfileNavItem, UserProfileNavItemLoading } from './users'
 import { HorseshoeSpinner } from './spinner'
 
-export const HeaderSection = ({ input, user, logout, checkLoginState, hamburger }) =>
+export const HeaderSection = ({ input, user, header, authentication }) =>
   <nav
     class='navbar is-warning'
     role='navigation'
     aria-label='main navigation'
-    oncreate={checkLoginState} >
+    oncreate={header.checkLoginState} >
 
-    <HeaderLeftSection user={user} hamburger={hamburger}/>
-
-    <div class={userControlsActive(user)} id='navbarUserControls'>
-      <UserLinkOrSignupSection user={user} logout={logout} />
-    </div>
+    <HeaderLeftSection user={user} {...header.controls} />
+    <UserLinkOrSignupSection user={user.header} {...authentication} />
   </nav>
-
-const userControlsActive = (user) => {
-  if (user.controlsActive) {
-    return "navbar-menu is-active"
-  }
-  return "navbar-menu"
-}
 
 const HeaderLeftSection = ({user, hamburger}) =>
   <div class='navbar-start'>
@@ -38,10 +28,14 @@ const HeaderLeftSection = ({user, hamburger}) =>
     </div>
   </div>
 
+const HeaderRightSection = ({user, logout}) =>
+  <div class={controlsActiveClass(user)} id='navbarUserControls'>
+    <UserLinkOrSignupSection user={user} logout={logout} />
+  </div>
+
 const UserLinkOrSignupSection = ({user, logout}) => {
   if (user.isLoading || user.isChangingAuthState) {
-    console.log('lloooaddd');
-    <UserProfileNavItemLoading />
+    return <UserProfileNavItemLoading />
   }
 
   if (user.isLoggedIn) {
@@ -78,3 +72,12 @@ export const HeroSection = ({motto}) =>
         </div>
       </div>
     </section>
+
+const controlsActiveClass = (controls) => {
+  if (controls) {
+    if (controls.active) {
+      return "navbar-menu is-active"
+    }
+  }
+  return "navbar-menu"
+}

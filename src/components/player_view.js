@@ -9,7 +9,7 @@ import { config } from '../config'
 import moment from 'moment'
 
 export const PlayerView = (state, actions) => ({ location, match }) =>
-  <watch oncreate={() => actions.fetchBroadcast(match.params['broadcastID'])}>
+  <watch oncreate={() => actions.currentBroadcast.fetch(match.params['broadcastID'])}>
     <div class='container'>
       <VideoTag
         bucket={config.VideoBucket}
@@ -18,23 +18,25 @@ export const PlayerView = (state, actions) => ({ location, match }) =>
         actions={actions}
         />
 
-        <ShowSpinnerIf isFetching={state.isFetching} />
-        <ShowBroadcastInfoIf
-          broadcast={state.currentBroadcast}
-          broadcastActions={actions.currentBroadcast} />
+        <ShowSpinnerIf isFetching={state.currentBroadcast.isFetching} />
+        <ShowBroadcastInfoIf broadcast={state.currentBroadcast} {...actions.currentBroadcast} />
     </div>
   </watch>
 
-const ShowBroadcastInfoIf = ({broadcast, broadcastActions}) => {
-  if (Object.keys(broadcast).length > 2) { return <BroadcastInfo broadcast={broadcast} broadcastActions={broadcastActions}/> }
+const ShowBroadcastInfoIf = ({broadcast, like, dislike, flag}) => {
+  if (broadcast) {
+    if (broadcast.details) {
+      return (<BroadcastInfo broadcast={broadcast.details} like={like} dislike={dislike} flag={flag} />)
+    }
+  }
 }
 
-const BroadcastInfo = ({broadcast, broadcastActions}) =>
+const BroadcastInfo = ({broadcast, like, dislike, flag}) =>
   <section id='broadcast-info' class=''>
     <section class='section'>
       <BroadcastDetails broadcast={broadcast} />
       <br />
-      <BroadcastControls broadcast={broadcast} broadcastActions={broadcastActions}/>
+      <BroadcastControls broadcast={broadcast} like={like} dislike={dislike} flag={flag} />
       <UserItemProfile user={broadcast.user} />
       <hr />
     </section>
@@ -47,11 +49,11 @@ const BroadcastDetails = ({broadcast}) =>
     <p class='subtitle'>{moment(broadcast.createdAt).fromNow()}</p>
   </div>
 
-const BroadcastControls = ({broadcast, broadcastActions}) =>
+const BroadcastControls = ({broadcast, like, dislike, flag}) =>
   <div class='level-right'>
-    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={broadcastActions.like} name='Like' /></p>
-    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={broadcastActions.dislike} name='Dislike' /></p>
-    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={broadcastActions.flag} name='Flag' /></p>
+    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={like} name='Like' /></p>
+    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={dislike} name='Dislike' /></p>
+    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={flag} name='Flag' /></p>
   </div>
 
 const VideoTag = ({state, actions, bucket, broadcastID}) =>

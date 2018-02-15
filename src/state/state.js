@@ -1,10 +1,10 @@
 import { Link, Route, location } from "@hyperapp/router"
 
 export const state = {
-  user: null,
+  user: {authentication:{details:{}}},
   player: null,
   isFetching: false,
   error: null,
-  broadcasts: [],
+  broadcasts: {fetched:[]},
   currentBroadcast: {}
 }

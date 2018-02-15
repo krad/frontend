@@ -4,7 +4,6 @@ import { StringInput, PasswordInput } from './inputs'
 import { userProfileImgURL } from './users'
 
 export const ManageProfileView = (user, actions) => ({ location, match }) => {
-  if (!user.userID || !user.isLoggedIn) { return <Redirect to='/login' /> }
   return (
   <div class='container'>
     <section class='section'>

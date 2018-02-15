@@ -27,9 +27,15 @@ const readFromFile = (filename) => {
         return
       }
 
+      if (filename.startsWith('/users/signup')) {
+        const user = require('./signup')
+        resolve(user.default)
+        return
+      }
+
       resolve(null)
       return
-    }, 2000)
+    }, 400)
   })
 }
 
