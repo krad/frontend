@@ -10,11 +10,11 @@ export const HeaderSection = ({ input, user, header, authentication }) =>
     aria-label='main navigation'
     oncreate={header.checkLoginState} >
 
-    <HeaderLeftSection user={user} {...header.controls} />
-    <UserLinkOrSignupSection user={user.header} {...authentication} />
+    <HeaderLeftSection {...header.controls} />
+    <UserLinkOrSignupSection user={user.authentication} {...authentication} />
   </nav>
 
-const HeaderLeftSection = ({user, hamburger}) =>
+const HeaderLeftSection = ({hamburger}) =>
   <div class='navbar-start'>
     <div class='navbar-brand'>
       <a href='/' class='navbar-item'>
@@ -39,7 +39,7 @@ const UserLinkOrSignupSection = ({user, logout}) => {
   }
 
   if (user.isLoggedIn) {
-    return (<UserProfileNavItem user={user} logout={logout} />)
+    return (<UserProfileNavItem user={user.details} logout={logout} />)
   }
 
   return (<HeaderSignUpSection />)

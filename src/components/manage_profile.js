@@ -4,6 +4,9 @@ import { StringInput, PasswordInput } from './inputs'
 import { userProfileImgURL } from './users'
 
 export const ManageProfileView = (user, actions) => ({ location, match }) => {
+  var check = redirectCheck(user.authentication.details, user.authentication)
+  if (check) { return check }
+
   return (
   <div class='container'>
     <section class='section'>
@@ -11,12 +14,19 @@ export const ManageProfileView = (user, actions) => ({ location, match }) => {
         <h1 class='title'>{sectionTitle(user)}</h1>
         <div class='card'>
           <div class='card-content'>
-            <ManageProfileForm user={user} {...actions.user} />
+            <ManageProfileForm user={user} {...actions.profile} />
           </div>
         </div>
       </div>
     </section>
   </div>)
+}
+
+const redirectCheck = (user, userState) => {
+  if (user) {
+    if (!user.userID || !userState.isLoggedIn) { return (<Redirect to='/login' />) }
+  }
+  return null
 }
 
 const ManageProfileForm = ({user, edit, update, prepareUpload}) =>

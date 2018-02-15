@@ -9,10 +9,8 @@ export const Authentication = {
   setDetails: (value) => state => ({details: value}),
 
   login: value => async (state, actions) => {
-    console.log('login');
     actions.setIsChangingAuthState(true)
     await POST('/users/login', state.details).then(result => {
-      console.log('-----', result);
       actions.setError(null)
       actions.setDetails(result)
       actions.setIsLoggedIn(true)
@@ -29,7 +27,6 @@ export const Authentication = {
   },
 
   logout: () => async (state, actions) => {
-    console.log('logout');
     actions.setIsChangingAuthState(true)
     await POST('/users/logout', {})
     .then(result => {
@@ -43,7 +40,6 @@ export const Authentication = {
   signup: () => async (state, actions) => {
     actions.setIsChangingAuthState(true)
     await POST('/users/signup', state.details).then(result => {
-      console.log('-----', result);
       actions.setError(null)
       actions.setDetails(result)
       actions.setIsLoggedIn(false)

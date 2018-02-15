@@ -3,19 +3,31 @@ import { Link, Route, Redirect, location } from "@hyperapp/router"
 import { CountryCodeDropdown, PhoneNumberInput, PasswordInput } from './inputs'
 
 export const LoginView = (user, actions) => ({ location, match }) => {
-  if (user.isLoggedIn) { return <Redirect to='/' /> }
-  return (<div class='container'>
+  var check = redirectChecks(user.authentication.details, user.authentication)
+  if (check) { return check }
+
+  return (<LoginContainer user={user.authentication} authentication={actions.authentication} />)
+}
+
+const redirectChecks = (user, userState) => {
+  if (user) {
+    if (user.userID && userState.isLoggedIn) { return <Redirect to='/' /> }
+  }
+  return null
+}
+
+const LoginContainer = ({user, authentication}) =>
+  <div class='container'>
     <div class="column is-4 is-offset-4">
       <h3 class="title has-text-grey">Login</h3>
       <div class="box">
-        <LoginForm user={user} {...actions.user} />
+        <LoginForm user={user} error={user.error} {...authentication} />
       </div>
       <OtherAuthOptionsComponent />
     </div>
-  </div>)
-}
+  </div>
 
-const LoginForm = ({user, edit, login}) =>
+const LoginForm = ({user, edit, login, error}) =>
   <form id='login'>
     <div class='field has-addons'>
       <p class='control'><CountryCodeDropdown change={edit} /></p>
@@ -40,7 +52,7 @@ const LoginForm = ({user, edit, login}) =>
       class={isLoadingClass(user)}
       onclick={login}
       >Login</a>
-      <p class='has-text-centered>'>{user.error}</p>
+      <p class='help is-danger has-text-centered'>{error}</p>
  </form>
 
 const isLoadingClass = (user) => {
