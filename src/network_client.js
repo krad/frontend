@@ -21,6 +21,11 @@ const readFromFile = (filename) => {
       //   return
       // }
 
+      if (filename.startsWith('/users/names/available')) {
+        resolve({available: true})
+        return
+      }
+
       if (filename.startsWith('/users/login')) {
         const user = require('./me')
         resolve(user.default)

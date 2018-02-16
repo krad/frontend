@@ -29,31 +29,33 @@ const LoginContainer = ({user, authentication}) =>
 
 const LoginForm = ({user, edit, login, error}) =>
   <form id='login'>
-    <div class='field has-addons'>
-      <p class='control'><CountryCodeDropdown change={edit} /></p>
-      <p class="control is-expanded has-icons-left">
-        <PhoneNumberInput
-          change={edit}
-          value={user.phoneNumber}
-          enter={login}
-          />
-      </p>
-    </div>
-    <div class='field'>
-      <p class='control'>
-        <PasswordInput
-          change={edit}
-          value={user.password}
-          enter={login}
-          />
-      </p>
-    </div>
-    <a id='loginButton'
-      class={isLoadingClass(user)}
-      onclick={login}
-      >Login</a>
-      <p class='help is-danger has-text-centered'>{error}</p>
+    <LoginPhoneNumberField details={user.details} edit={edit} login={login} />
+    <LoginPasswordField details={user.details} edit={edit} login={login} />
+
+    <a id='loginButton' class={isLoadingClass(user)} onclick={login}>Login</a>
+    <p class='help is-danger has-text-centered'>{error}</p>
  </form>
+
+const LoginPhoneNumberField = ({details, edit, login}) =>
+  <div class='field has-addons'>
+    <p class="control"><CountryCodeDropdown change={edit} /></p>
+
+    <p class="control is-expanded has-icons-left">
+      <LoginPhoneNumberInput phoneNumber={details.phoneNumber}
+                                    edit={edit}
+                                   login={login} />
+    </p>
+  </div>
+
+const LoginPasswordField = ({details, edit, login}) =>
+  <div class='field'>
+    <p class='control'>
+      <PasswordInput change={edit} value={details.password} enter={login} />
+    </p>
+  </div>
+
+const LoginPhoneNumberInput = ({phoneNumber, edit, login}) =>
+  <PhoneNumberInput value={phoneNumber} change={edit} enter={login} />
 
 const isLoadingClass = (user) => {
   if (user) {

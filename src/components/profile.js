@@ -4,22 +4,10 @@ import { StringInput, PasswordInput } from './inputs'
 import { userProfileImgURL } from './users'
 
 export const ManageProfileView = (user, actions) => ({ location, match }) => {
-  var check = redirectCheck(user.authentication.details, user.authentication)
-  if (check) { return check }
+  // var check = redirectCheck(user.authentication.details, user.authentication)
+  // if (check) { return check }
 
-  return (
-  <div class='container'>
-    <section class='section'>
-      <div class='container'>
-        <h1 class='title'>{sectionTitle(user)}</h1>
-        <div class='card'>
-          <div class='card-content'>
-            <ManageProfileForm user={user} {...actions.profile} />
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>)
+  return (<ManageProfileContainer user={user.authentication} profile={actions.profile} />)
 }
 
 const redirectCheck = (user, userState) => {
@@ -29,10 +17,29 @@ const redirectCheck = (user, userState) => {
   return null
 }
 
+const ManageProfileContainer = ({user, profile}) =>
+  <div class='container'>
+    <section class='section'>
+      <div class='container'>
+        <h1 class='title'>{sectionTitle(user)}</h1>
+        <div class='card'>
+          <div class='card-content'>
+            <ManageProfileForm user={user} error={user.error} {...profile} />
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
 const ManageProfileForm = ({user, edit, update, prepareUpload}) =>
   <profile>
     <form id='profile'>
-      <UserNameSection user={user} edit={edit} update={update} />
+      <UserNameSection
+        user={user}
+        edit={edit}
+        update={update} />
+
       <PasswordSection user={user} edit={edit} update={update} />
       <ProfileImageSection photo={user.photo} prepareUpload={prepareUpload} />
       <NameSection user={user} edit={edit} update={update} />
@@ -45,12 +52,11 @@ const ManageProfileForm = ({user, edit, update, prepareUpload}) =>
     </form>
   </profile>
 
-const UserNameSection = ({user, username, edit, update, checkAvailability}) =>
+const UserNameSection = ({user, edit, update}) =>
   <div class='field'>
     <TextInputField
       name='username'
       label='Username'
-      value={user.username}
       placeholder='Select a username'
       edit={edit}
       update={update}
@@ -169,7 +175,7 @@ const passwordPlaceholder = (user) => {
 
 const isLoadingClass = (user) => {
   if (user) {
-    if (user.isUpdating) {
+    if (user.isLoading) {
       return "button is-info is-fullwidth is-expanded is-loading"
     }
   }

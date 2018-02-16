@@ -11,7 +11,7 @@ import { LoginView } from './components/login'
 import { SignupView } from './components/signup'
 import { SignupVerifyView } from './components/verify'
 import { ForgotPasswordView } from './components/forgot_password'
-import { ManageProfileView } from './components/manage_profile'
+import { ManageProfileView } from './components/profile'
 import { UserChannelView } from './components/user_channel'
 import { HelpView } from './components/help'
 import logger from "@hyperapp/logger"
@@ -33,5 +33,7 @@ const view = (state, actions) =>
     <Route path='/help' render={HelpView(state, actions)} />
   </main>
 
-const main        = logger({})(app)(state, actions, view, document.body)
+// const main        = logger({})(app)(state, actions, view, document.body)
+const main        = app(state, actions, view, document.body)
+
 const unsubscribe = location.subscribe(main.location)

@@ -1,13 +1,22 @@
+import { GET, POST } from '../../network_client'
+import { setIsLoading, setError, setIsChangingAuthState } from '../async_helpers'
+import { edit } from './details'
+
 export const Profile = {
+
+  edit: edit,
+  setIsLoading: setIsLoading,
+  setIsCheckingAvailable: (value) => state => ({isCheckingAvailable: value}),
+
   checkAvailability: value => async (state, actions) => {
-    // actions.setIsCheckingAvailable(true)
-    await POST('/users/names/available', {username: value})
+    actions.setIsCheckingAvailable(true)
+    await POST('/users/names/available', {username: value.value})
     .then(result => {
       // actions.setUsernameAvailable(result.available)
     }).catch(err => {
       setError('Problem checking username')
     })
-    // actions.setIsCheckingAvailable(false)
+    actions.setIsCheckingAvailable(false)
   },
 
   prepareUpload: (target) => async (state, actions) => {
@@ -39,19 +48,15 @@ export const Profile = {
     })
   },
 
-  edit: value => (state, actions) => {
-    state[value.name] = value.value
-    return state
-  },
-
   update: value => async (state, actions) => {
-    actions.setIsUpdating(true)
+    console.log('updattteeee....', state);
+    actions.setIsLoading(true)
     await POST('/users/me', state).then(result => {
-      actions.setIsVerified(true)
+      // actions.setIsVerified(true)
     }).catch(err => {
       actions.setError('Problem updating profile')
     })
-    actions.setIsUpdating(false)
+    actions.setIsLoading(false)
   },
 
 }
