@@ -9,7 +9,7 @@ export const Broadcast = {
 
   setDetails: (value) => state => ({details: value}),
 
-  fetch: (broadcastID) => async(state, actions) => {
+  fetch: (broadcastID) => async (state, actions) => {
     actions.setIsFetching(true)
     GET(['/broadcasts', broadcastID].join('/'))
     .then(broadcast => {
@@ -18,6 +18,17 @@ export const Broadcast = {
     }).catch(err => {
       actions.setError('Could not fetch broadcast')
     })
+  },
+
+  notifyView: (broadcastID) => async (state, actions) => {
+    await POST(['/broadcasts', broadcastID, 'viewed'].join('/'), {})
+    .then(result => {})
+    .catch(err => {})
+  },
+
+  notifyAndFetch: (broadcastID) => async (state, actions) => {
+    actions.fetch(broadcastID)
+    actions.notifyView(broadcastID)
   },
 
   setOpinion: value => state => ({opinion: value}),

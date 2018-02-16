@@ -18,8 +18,8 @@ export const UserItemProfile = ({user}) =>
     </div>
   </div>
 
-export const UserProfileImage = ({user}) =>
-  <img src={userProfileImgURL(user)} alt={userProfileImgAlt(user)} />
+export const UserProfileImage = ({user, dimensions}) =>
+  <img src={userProfileImgURL(user, dimensions)} alt={userProfileImgAlt(user)} />
 
 export const UserProfileNavItemLoading = () =>
   <div class='navbar-item'>

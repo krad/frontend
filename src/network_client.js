@@ -3,6 +3,13 @@ import { config } from './config'
 const readFromFile = (filename) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
+
+      if (filename.startsWith('/broadcasts/by')) {
+        const broadcasts = require('./channel')
+        resolve(broadcasts.default)
+        return
+      }
+
       if (filename.startsWith('/broadcasts/')) {
         const broadcasts = require('./broadcast')
         resolve(broadcasts.default)

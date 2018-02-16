@@ -9,7 +9,8 @@ import { config } from '../config'
 import moment from 'moment'
 
 export const PlayerView = (state, actions) => ({ location, match }) =>
-  <watch oncreate={() => actions.currentBroadcast.fetch(match.params['broadcastID'])}>
+  <watch
+    oncreate={() => actions.currentBroadcast.notifyAndFetch(match.params['broadcastID'])}>
     <div class='container'>
       <VideoTag
         bucket={config.VideoBucket}
@@ -47,6 +48,7 @@ const BroadcastDetails = ({broadcast}) =>
   <div>
     <p class='title'>{broadcast.title}</p>
     <p class='subtitle'>{moment(broadcast.createdAt).fromNow()}</p>
+    <p class='subtitle'>{broadcast.views} views</p>
   </div>
 
 const BroadcastControls = ({broadcast, like, dislike, flag}) =>

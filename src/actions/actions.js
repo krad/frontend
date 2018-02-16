@@ -3,6 +3,7 @@ import { setIsLoading, setIsFetching, setError } from './async_helpers'
 import { User } from './user'
 import { Broadcasts } from './broadcasts'
 import { Broadcast } from './broadcast'
+import { Channel } from './channel'
 
 const plainview = require('@krad/plainview')
 
@@ -14,7 +15,8 @@ export const actions = {
   user: User,
   broadcasts: Broadcasts,
   currentBroadcast: Broadcast,
-  
+  channel: Channel,
+
   configurePlayer: el => state => {
     state.player = new plainview(el.id)
     state.player.play(x => { })

@@ -18,7 +18,7 @@ export const BrowseVideos = (state, actions) => ({ location, match }) => (
   </browse>
 )
 
-const VideosSection = ({bucket, broadcasts}) =>
+export const VideosSection = ({bucket, broadcasts}) =>
     <section class='section'>
       <div class='container'>
         <div class='columns is-multiline'>

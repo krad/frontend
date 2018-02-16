@@ -28,7 +28,7 @@ const view = (state, actions) =>
     <Route path='/signup' render={SignupView(state.user, actions.user)} />
     <Route path='/verify' render={SignupVerifyView(state.user, actions.user)} />
     <Route path='/profile' render={ManageProfileView(state.user, actions.user)} />
-    <Route path='/channel/:userID' render={UserChannelView(state, actions)} />
+    <Route path='/channel/:userID' render={UserChannelView(state.channel, actions.channel)} />
     <Route path='/forgotpassword' render={ForgotPasswordView(state, actions)} />
     <Route path='/help' render={HelpView(state, actions)} />
   </main>

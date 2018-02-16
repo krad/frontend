@@ -10,8 +10,8 @@ export const HeaderSection = ({ input, user, header, profile }) =>
     aria-label='main navigation'
     oncreate={profile.checkLoginState} >
 
-    <HeaderLeftSection {...header.controls} />
-    <UserLinkOrSignupSection user={user.profile} {...profile} />
+    <HeaderLeftSection {...header} />
+    <HeaderRightSection user={user} {...profile} />
   </nav>
 
 const HeaderLeftSection = ({hamburger}) =>
@@ -29,8 +29,8 @@ const HeaderLeftSection = ({hamburger}) =>
   </div>
 
 const HeaderRightSection = ({user, logout}) =>
-  <div class={controlsActiveClass(user)} id='navbarUserControls'>
-    <UserLinkOrSignupSection user={user} logout={logout} />
+  <div class={controlsActiveClass(user.header)} id='navbarUserControls'>
+    <UserLinkOrSignupSection user={user.profile} logout={logout} />
   </div>
 
 const UserLinkOrSignupSection = ({user, logout}) => {

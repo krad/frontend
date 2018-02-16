@@ -4,6 +4,7 @@ import { setIsLoading, setIsFetching, setError } from './async_helpers'
 export const Broadcasts = {
 
   setIsFetching: setIsFetching,
+  setError: setError,
   updateBroadcasts: (value) => state => ({fetched: value}),
 
   fetch: () => async (state, actions) => {
