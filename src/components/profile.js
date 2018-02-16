@@ -7,24 +7,31 @@ export const ManageProfileView = (user, actions) => ({ location, match }) => {
   var check = redirectCheck(user.authentication.details, user.authentication)
   if (check) { return check }
 
-  return (<ManageProfileContainer user={user.authentication} profile={actions.profile} />)
+  return (<ManageProfileContainer user={user.authentication} {...actions.authentication} {...actions.profile} />)
 }
 
 const redirectCheck = (user, userState) => {
   if (user) {
-    if (!user.userID || !userState.isLoggedIn) { return (<Redirect to='/login' />) }
+    if (!user.userID) { return (<Redirect to='/login' />) }
   }
   return null
 }
 
-const ManageProfileContainer = ({user, profile}) =>
+const ManageProfileContainer = ({user, update, edit, prepareUpload}) =>
   <div class='container'>
     <section class='section'>
       <div class='container'>
-        <h1 class='title'>{sectionTitle(user)}</h1>
+        <h1 class='title'>{sectionTitle(user.details)}</h1>
         <div class='card'>
           <div class='card-content'>
-            <ManageProfileForm user={user} error={user.error} {...profile} />
+            <ManageProfileForm
+              user={user}
+              error={user.error}
+              success={user.success}
+              edit={edit}
+              prepareUpload={prepareUpload}
+              update={update}
+              />
           </div>
         </div>
       </div>
@@ -32,7 +39,7 @@ const ManageProfileContainer = ({user, profile}) =>
   </div>
 
 
-const ManageProfileForm = ({user, error, edit, update, prepareUpload}) =>
+const ManageProfileForm = ({user, error, success, edit, update, prepareUpload}) =>
   <profile>
     <form id='profile'>
       <UserNameSection
@@ -46,6 +53,7 @@ const ManageProfileForm = ({user, error, edit, update, prepareUpload}) =>
 
       <a id='updateProfileButton' class={isLoadingClass(user)} onclick={update}>Update Profile</a>
       <p class='help is-danger has-text-centered'>{error}</p>
+      <p class='help is-success has-text-centered'>{success}</p>
     </form>
   </profile>
 
@@ -155,28 +163,31 @@ const uploadProgress = (photo) => {
 }
 
 const sectionTitle = (user) => {
-  if (user.isVerified) {
-    return 'Manage Profile'
-  } else {
-    return 'Setup your profile'
+  if (user) {
+    if (user.isVerified) {
+      return 'Manage Profile'
+    }
   }
+
+  return 'Setup your profile'
 }
 
 const passwordPlaceholder = (user) => {
-  if(user.isVerified)  {
-    return 'Update your password'
-  } else {
-    return 'Set your password'
+  if (user) {
+    if (user.isVerified) {
+      return 'Update your password'
+    }
   }
+  return 'Set your password'
 }
 
 const isLoadingClass = (user) => {
   if (user) {
     if (user.isLoading) {
-      return "button is-info is-fullwidth is-expanded"
+      return "button is-info is-fullwidth is-expanded is-loading"
     }
   }
-  return "button is-info is-fullwidth is-expanded is-loading" + JSON.stringify(user)
+  return "button is-info is-fullwidth is-expanded"
 }
 
 const textInputIsLoadingClass = (user) => {

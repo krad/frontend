@@ -1,4 +1,4 @@
-import { setIsLoading, setError, setIsChangingAuthState } from '../async_helpers'
+import { setIsLoading, setError, setIsChangingAuthState, setSuccess } from '../async_helpers'
 import { GET, POST } from '../../network_client'
 import { edit } from './details'
 
@@ -6,10 +6,11 @@ export const Authentication = {
 
   edit: edit,
   setError: setError,
+  setSuccess: setSuccess,
   setIsChangingAuthState: setIsChangingAuthState,
   setIsLoading: setIsLoading,
-  setIsLoggedIn: (isLoggedIn) => state => ({isLoggedIn: isLoggedIn}),
-  setDetails: (value) => state => ({details: value}),
+  setIsLoggedIn: isLoggedIn => state => ({isLoggedIn: isLoggedIn}),
+  setDetails: value => state => ({details: value}),
 
   checkLoginState: () => async (state, actions) => {
     actions.setIsLoading(true)
@@ -18,7 +19,7 @@ export const Authentication = {
       actions.setDetails(result)
       actions.setIsLoggedIn(true)
     }).catch(err => {
-      actions.setCurrentUser(null)
+      actions.setDetails({})
     })
     actions.setIsLoading(false)
   },
@@ -59,4 +60,19 @@ export const Authentication = {
     })
     actions.setIsChangingAuthState(false)
   },
+
+  update: value => async (state, actions) => {
+    actions.setIsLoading(true)
+    await POST('/users/me', state.details).then(result => {
+      actions.setError(null)
+      actions.setDetails(result)
+      actions.setSuccess('Profile updated.')
+    }).catch(err => {
+      console.log(err);
+      actions.setSuccess(null)
+      actions.setError('Problem updating profile')
+    })
+    actions.setIsLoading(false)
+  },
+
 }

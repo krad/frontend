@@ -1,4 +1,4 @@
-import { GET, POST } from '../../network_client'
+import { GET, POST, UPLOAD } from '../../network_client'
 import { setIsLoading, setError, setIsChangingAuthState } from '../async_helpers'
 import { edit } from './details'
 
@@ -49,17 +49,4 @@ export const Profile = {
       actions.setError('Upload failed')
     })
   },
-
-  update: value => async (state, actions) => {
-    actions.setIsLoading(true)
-    await POST('/users/me', state.details).then(result => {
-      actions.setError(null)
-      actions.setIsVerified(true)
-      actions.setDetails(result)
-    }).catch(err => {
-      actions.setError('Problem updating profile')
-    })
-    actions.setIsLoading(false)
-  },
-
 }
