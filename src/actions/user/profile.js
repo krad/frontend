@@ -5,8 +5,11 @@ import { edit } from './details'
 export const Profile = {
 
   edit: edit,
+  setError: setError,
   setIsLoading: setIsLoading,
   setIsCheckingAvailable: (value) => state => ({isCheckingAvailable: value}),
+  setUploadProgress: (value) => state => ({upload: value}),
+  setDetails: (value) => state => ({details: value}),
 
   checkAvailability: value => async (state, actions) => {
     actions.setIsCheckingAvailable(true)
@@ -14,7 +17,7 @@ export const Profile = {
     .then(result => {
       // actions.setUsernameAvailable(result.available)
     }).catch(err => {
-      setError('Problem checking username')
+      actions.setError('Problem checking username')
     })
     actions.setIsCheckingAvailable(false)
   },
@@ -23,36 +26,36 @@ export const Profile = {
     var files = target.files
     if (files.length > 0) {
       var file = files[0]
-      // actions.setCurrentUser({photo: {name: file.name, progress: '0', size: file.size}})
+      actions.setUploadProgress({name: file.name, progress: '0', size: file.size})
       await POST('/uploads/sign', {contentType: file.type, fileName: "profile.jpg"})
       .then(signedInfo => {
         signedInfo.target = file
-        // actions.upload(signedInfo)
+        actions.upload(signedInfo)
       }).catch(err => {
-        console.log('err signing', err);
+        actions.setError('Could not upload image')
       })
-
     } else {
-      // actions.setError('Could not read image file type')
+      actions.setError('Could not read image file type')
     }
   },
 
   upload: (uploadInfo) => async (state, actions) => {
     await UPLOAD(uploadInfo.url, uploadInfo.target.type, uploadInfo.target, (progress) =>{
       var percentComplete = ((progress.loaded / progress.total) * 100)
-      // actions.setCurrentUser({photo: {progress: percentComplete.toString()}})
+      actions.setUploadProgress({progress: percentComplete.toString()})
     }).then(result => {
       console.log(result)
     }).catch(err => {
-      // actions.setError('Upload failed')
+      actions.setError('Upload failed')
     })
   },
 
   update: value => async (state, actions) => {
-    console.log('updattteeee....', state);
     actions.setIsLoading(true)
-    await POST('/users/me', state).then(result => {
-      // actions.setIsVerified(true)
+    await POST('/users/me', state.details).then(result => {
+      actions.setError(null)
+      actions.setIsVerified(true)
+      actions.setDetails(result)
     }).catch(err => {
       actions.setError('Problem updating profile')
     })

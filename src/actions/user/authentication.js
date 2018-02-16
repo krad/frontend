@@ -4,12 +4,24 @@ import { edit } from './details'
 
 export const Authentication = {
 
+  edit: edit,
   setError: setError,
   setIsChangingAuthState: setIsChangingAuthState,
+  setIsLoading: setIsLoading,
   setIsLoggedIn: (isLoggedIn) => state => ({isLoggedIn: isLoggedIn}),
   setDetails: (value) => state => ({details: value}),
 
-  edit: edit,
+  checkLoginState: () => async (state, actions) => {
+    actions.setIsLoading(true)
+    await GET('/users/me').then(result => {
+      actions.setError(null)
+      actions.setDetails(result)
+      actions.setIsLoggedIn(true)
+    }).catch(err => {
+      actions.setCurrentUser(null)
+    })
+    actions.setIsLoading(false)
+  },
 
   login: value => async (state, actions) => {
     actions.setIsChangingAuthState(true)
@@ -28,10 +40,11 @@ export const Authentication = {
     await POST('/users/logout', {})
     .then(result => {
       actions.setError(null)
-      actions.setDetails(null)
+      actions.setDetails({})
       actions.setIsLoggedIn(false)
+    }).catch(err => {
+      actions.setError('Problem logging out')
     })
-    .catch(err => { console.log(err) })
     actions.setIsChangingAuthState(false)
   },
 

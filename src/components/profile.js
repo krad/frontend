@@ -4,8 +4,8 @@ import { StringInput, PasswordInput } from './inputs'
 import { userProfileImgURL } from './users'
 
 export const ManageProfileView = (user, actions) => ({ location, match }) => {
-  // var check = redirectCheck(user.authentication.details, user.authentication)
-  // if (check) { return check }
+  var check = redirectCheck(user.authentication.details, user.authentication)
+  if (check) { return check }
 
   return (<ManageProfileContainer user={user.authentication} profile={actions.profile} />)
 }
@@ -32,23 +32,20 @@ const ManageProfileContainer = ({user, profile}) =>
   </div>
 
 
-const ManageProfileForm = ({user, edit, update, prepareUpload}) =>
+const ManageProfileForm = ({user, error, edit, update, prepareUpload}) =>
   <profile>
     <form id='profile'>
       <UserNameSection
-        user={user}
+        user={user.details}
         edit={edit}
         update={update} />
 
-      <PasswordSection user={user} edit={edit} update={update} />
-      <ProfileImageSection photo={user.photo} prepareUpload={prepareUpload} />
-      <NameSection user={user} edit={edit} update={update} />
+      <PasswordSection user={user.details} edit={edit} update={update} />
+      <ProfileImageSection photo={user.upload} prepareUpload={prepareUpload} />
+      <NameSection user={user.details} edit={edit} update={update} />
 
-      <div class='field is-grouped'>
-        <a class={isLoadingClass(user)} onclick={update}>
-        Update Profile
-        </a>
-      </div>
+      <a id='updateProfileButton' class={isLoadingClass(user)} onclick={update}>Update Profile</a>
+      <p class='help is-danger has-text-centered'>{error}</p>
     </form>
   </profile>
 
@@ -58,9 +55,9 @@ const UserNameSection = ({user, edit, update}) =>
       name='username'
       label='Username'
       placeholder='Select a username'
+      value={user.username}
       edit={edit}
-      update={update}
-      isLoading={user.isCheckingAvailable} />
+      update={update} />
   </div>
 
 const PasswordSection = ({user, edit, update}) =>
@@ -176,10 +173,10 @@ const passwordPlaceholder = (user) => {
 const isLoadingClass = (user) => {
   if (user) {
     if (user.isLoading) {
-      return "button is-info is-fullwidth is-expanded is-loading"
+      return "button is-info is-fullwidth is-expanded"
     }
   }
-  return "button is-info is-fullwidth is-expanded"
+  return "button is-info is-fullwidth is-expanded is-loading" + JSON.stringify(user)
 }
 
 const textInputIsLoadingClass = (user) => {

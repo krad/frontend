@@ -8,7 +8,7 @@ export const HeaderSection = ({ input, user, header, authentication }) =>
     class='navbar is-warning'
     role='navigation'
     aria-label='main navigation'
-    oncreate={header.checkLoginState} >
+    oncreate={authentication.checkLoginState} >
 
     <HeaderLeftSection {...header.controls} />
     <UserLinkOrSignupSection user={user.authentication} {...authentication} />
