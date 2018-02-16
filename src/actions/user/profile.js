@@ -13,7 +13,7 @@ export const Profile = {
 
   setIsLoggedIn: isLoggedIn => state => ({isLoggedIn: isLoggedIn}),
   setDetails: value => state => ({details: value}),
-  setIsCheckingAvailable: (value) => state => ({isCheckingAvailable: value}),
+  setIsCheckingAvailable: value => state => ({isCheckingAvailable: value}),
   setUploadProgress: value => state => ({upload: value}),
 
   checkLoginState: () => async (state, actions) => {
