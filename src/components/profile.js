@@ -4,10 +4,10 @@ import { StringInput, PasswordInput } from './inputs'
 import { userProfileImgURL } from './users'
 
 export const ManageProfileView = (user, actions) => ({ location, match }) => {
-  var check = redirectCheck(user.authentication.details, user.authentication)
+  var check = redirectCheck(user.profile.details, user.profile)
   if (check) { return check }
 
-  return (<ManageProfileContainer user={user.authentication} {...actions.authentication} {...actions.profile} />)
+  return (<ManageProfileContainer user={user.profile} {...actions.profile} />)
 }
 
 const redirectCheck = (user, userState) => {
@@ -77,7 +77,20 @@ const PasswordSection = ({user, edit, update}) =>
       update={update}  />
   </div>
 
-const ProfileImageSection = ({photo, prepareUpload}) =>
+const ProfileImageSection = ({photo, prepareUpload}) => {
+  if (photo) {
+    if (photo.photo) {
+      return (<ProfileImage photoURL={photo.photo} />)
+    }
+  }
+
+  return (<ProfileImageUploadButton photo={photo} prepareUpload={prepareUpload} />)
+}
+
+const ProfileImage = ({photoURL}) =>
+  <img src={photoURL} />
+
+const ProfileImageUploadButton = ({photo, prepareUpload}) =>
   <div class="field file has-name is-boxed is-fullwidth">
     <label class="file-label">
 
@@ -101,6 +114,7 @@ const ProfileImageSection = ({photo, prepareUpload}) =>
       </span>
     </label>
   </div>
+
 
 const NameSection = ({user, edit, update}) =>
   <div class='field'>

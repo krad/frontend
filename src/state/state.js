@@ -1,7 +1,7 @@
 import { Link, Route, location } from "@hyperapp/router"
 
 export const state = {
-  user: {authentication:{details:{}}},
+  user: {profile:{details:{}}},
   player: null,
   isFetching: false,
   error: null,

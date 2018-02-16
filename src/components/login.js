@@ -3,10 +3,10 @@ import { Link, Route, Redirect, location } from "@hyperapp/router"
 import { CountryCodeDropdown, PhoneNumberInput, PasswordInput } from './inputs'
 
 export const LoginView = (user, actions) => ({ location, match }) => {
-  var check = redirectChecks(user.authentication.details, user.authentication)
+  var check = redirectChecks(user.profile.details, user.profile)
   if (check) { return check }
 
-  return (<LoginContainer user={user.authentication} authentication={actions.authentication} />)
+  return (<LoginContainer user={user.profile} authentication={actions.profile} />)
 }
 
 const redirectChecks = (user, userState) => {

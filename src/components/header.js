@@ -3,15 +3,15 @@ import { Link, Route, location } from "@hyperapp/router"
 import { UserProfileNavItem, UserProfileNavItemLoading } from './users'
 import { HorseshoeSpinner } from './spinner'
 
-export const HeaderSection = ({ input, user, header, authentication }) =>
+export const HeaderSection = ({ input, user, header, profile }) =>
   <nav
     class='navbar is-warning'
     role='navigation'
     aria-label='main navigation'
-    oncreate={authentication.checkLoginState} >
+    oncreate={profile.checkLoginState} >
 
     <HeaderLeftSection {...header.controls} />
-    <UserLinkOrSignupSection user={user.authentication} {...authentication} />
+    <UserLinkOrSignupSection user={user.profile} {...profile} />
   </nav>
 
 const HeaderLeftSection = ({hamburger}) =>
