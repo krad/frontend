@@ -4,48 +4,68 @@ import { StringInput, PasswordInput } from './inputs'
 import { userProfileImgURL } from './users'
 
 export const ManageProfileView = (user, actions) => ({ location, match }) => {
-  if (!user.userID || !user.isLoggedIn) { return <Redirect to='/login' /> }
-  return (
+  var check = redirectCheck(user.profile.details, user.profile)
+  if (check) { return check }
+
+  return (<ManageProfileContainer user={user.profile} {...actions.profile} />)
+}
+
+const redirectCheck = (user, userState) => {
+  if (user) {
+    if (!user.userID) { return (<Redirect to='/login' />) }
+  }
+  return null
+}
+
+const ManageProfileContainer = ({user, update, edit, prepareUpload}) =>
   <div class='container'>
     <section class='section'>
       <div class='container'>
-        <h1 class='title'>{sectionTitle(user)}</h1>
+        <h1 class='title'>{sectionTitle(user.details)}</h1>
         <div class='card'>
           <div class='card-content'>
-            <ManageProfileForm user={user} {...actions.user} />
+            <ManageProfileForm
+              user={user}
+              error={user.error}
+              success={user.success}
+              edit={edit}
+              prepareUpload={prepareUpload}
+              update={update}
+              />
           </div>
         </div>
       </div>
     </section>
-  </div>)
-}
+  </div>
 
-const ManageProfileForm = ({user, edit, update, prepareUpload}) =>
+
+const ManageProfileForm = ({user, error, success, edit, update, prepareUpload}) =>
   <profile>
     <form id='profile'>
-      <UserNameSection user={user} edit={edit} update={update} />
-      <PasswordSection user={user} edit={edit} update={update} />
-      <ProfileImageSection photo={user.photo} prepareUpload={prepareUpload} />
-      <NameSection user={user} edit={edit} update={update} />
+      <UserNameSection
+        user={user.details}
+        edit={edit}
+        update={update} />
 
-      <div class='field is-grouped'>
-        <a class={isLoadingClass(user)} onclick={update}>
-        Update Profile
-        </a>
-      </div>
+      <PasswordSection user={user.details} edit={edit} update={update} />
+      <ProfileImageSection photo={user.upload} prepareUpload={prepareUpload} />
+      <NameSection user={user.details} edit={edit} update={update} />
+
+      <a id='updateProfileButton' class={isLoadingClass(user)} onclick={update}>Update Profile</a>
+      <p class='help is-danger has-text-centered'>{error}</p>
+      <p class='help is-success has-text-centered'>{success}</p>
     </form>
   </profile>
 
-const UserNameSection = ({user, username, edit, update, checkAvailability}) =>
+const UserNameSection = ({user, edit, update}) =>
   <div class='field'>
     <TextInputField
       name='username'
       label='Username'
-      value={user.username}
       placeholder='Select a username'
+      value={user.username}
       edit={edit}
-      update={update}
-      isLoading={user.isCheckingAvailable} />
+      update={update} />
   </div>
 
 const PasswordSection = ({user, edit, update}) =>
@@ -57,7 +77,20 @@ const PasswordSection = ({user, edit, update}) =>
       update={update}  />
   </div>
 
-const ProfileImageSection = ({photo, prepareUpload}) =>
+const ProfileImageSection = ({photo, prepareUpload}) => {
+  if (photo) {
+    if (photo.photo) {
+      return (<ProfileImage photoURL={photo.photo} />)
+    }
+  }
+
+  return (<ProfileImageUploadButton photo={photo} prepareUpload={prepareUpload} />)
+}
+
+const ProfileImage = ({photoURL}) =>
+  <img src={photoURL} />
+
+const ProfileImageUploadButton = ({photo, prepareUpload}) =>
   <div class="field file has-name is-boxed is-fullwidth">
     <label class="file-label">
 
@@ -81,6 +114,7 @@ const ProfileImageSection = ({photo, prepareUpload}) =>
       </span>
     </label>
   </div>
+
 
 const NameSection = ({user, edit, update}) =>
   <div class='field'>
@@ -143,24 +177,27 @@ const uploadProgress = (photo) => {
 }
 
 const sectionTitle = (user) => {
-  if (user.isVerified) {
-    return 'Manage Profile'
-  } else {
-    return 'Setup your profile'
+  if (user) {
+    if (user.isVerified) {
+      return 'Manage Profile'
+    }
   }
+
+  return 'Setup your profile'
 }
 
 const passwordPlaceholder = (user) => {
-  if(user.isVerified)  {
-    return 'Update your password'
-  } else {
-    return 'Set your password'
+  if (user) {
+    if (user.isVerified) {
+      return 'Update your password'
+    }
   }
+  return 'Set your password'
 }
 
 const isLoadingClass = (user) => {
   if (user) {
-    if (user.isUpdating) {
+    if (user.isLoading) {
       return "button is-info is-fullwidth is-expanded is-loading"
     }
   }

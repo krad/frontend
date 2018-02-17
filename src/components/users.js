@@ -18,8 +18,8 @@ export const UserItemProfile = ({user}) =>
     </div>
   </div>
 
-export const UserProfileImage = ({user}) =>
-  <img src={userProfileImgURL(user)} alt={userProfileImgAlt(user)} />
+export const UserProfileImage = ({user, dimensions}) =>
+  <img src={userProfileImgURL(user, dimensions)} alt={userProfileImgAlt(user)} />
 
 export const UserProfileNavItemLoading = () =>
   <div class='navbar-item'>
@@ -27,7 +27,8 @@ export const UserProfileNavItemLoading = () =>
   </div>
 
 export const UserProfileNavItem = ({user, logout}) => {
-  return (<div class='navbar-item has-dropdrown is-hoverable'>
+  return (
+  <div class='navbar-item has-dropdrown is-hoverable'>
     <a class='navbar-link'>
       <UserProfileImage user={user} />
     </a>
@@ -71,7 +72,7 @@ export const userProfileImgURL = (user, dimensions) => {
   if (config.IsTesting) {
     return 'https://via.placeholder.com/' + dimensions
   } else {
-    return '/images?dimensions=' + dimensions + '&key=' + user.userID +'/profile.jpg'
+    return '/images?dimensions=' + dimensions + '&nocache=' + randomCode(4) + '&key=' + user.userID +'/profile.jpg'
   }
 }
 
@@ -84,4 +85,19 @@ const userChannelURL = (user) => {
     return ['/channel', user.userID].join('/')
   }
   return '/'
+}
+
+const randomCode = (length) => {
+  var result = []
+  var step;
+  for (step = 0; step < length; step++) {
+    result.push(getRandomIntInclusive(0, 9))
+  }
+  return result.join("")
+}
+
+const getRandomIntInclusive = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

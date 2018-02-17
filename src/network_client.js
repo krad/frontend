@@ -3,6 +3,13 @@ import { config } from './config'
 const readFromFile = (filename) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
+
+      if (filename.startsWith('/broadcasts/by')) {
+        const broadcasts = require('./channel')
+        resolve(broadcasts.default)
+        return
+      }
+
       if (filename.startsWith('/broadcasts/')) {
         const broadcasts = require('./broadcast')
         resolve(broadcasts.default)
@@ -15,11 +22,16 @@ const readFromFile = (filename) => {
         return
       }
 
-      // if (filename.startsWith('/users/me')) {
-      //   const user = require('./me')
-      //   resolve(user.default)
-      //   return
-      // }
+      if (filename.startsWith('/users/me')) {
+        const user = require('./me')
+        resolve(user.default)
+        return
+      }
+
+      if (filename.startsWith('/users/names/available')) {
+        resolve({available: true})
+        return
+      }
 
       if (filename.startsWith('/users/login')) {
         const user = require('./me')
@@ -27,9 +39,15 @@ const readFromFile = (filename) => {
         return
       }
 
+      if (filename.startsWith('/users/signup')) {
+        const user = require('./signup')
+        resolve(user.default)
+        return
+      }
+
       resolve(null)
       return
-    }, 2000)
+    }, 1000)
   })
 }
 

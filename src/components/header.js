@@ -3,28 +3,18 @@ import { Link, Route, location } from "@hyperapp/router"
 import { UserProfileNavItem, UserProfileNavItemLoading } from './users'
 import { HorseshoeSpinner } from './spinner'
 
-export const HeaderSection = ({ input, user, logout, checkLoginState, hamburger }) =>
+export const HeaderSection = ({ input, user, header, profile }) =>
   <nav
     class='navbar is-warning'
     role='navigation'
     aria-label='main navigation'
-    oncreate={checkLoginState} >
+    oncreate={profile.checkLoginState} >
 
-    <HeaderLeftSection user={user} hamburger={hamburger}/>
-
-    <div class={userControlsActive(user)} id='navbarUserControls'>
-      <UserLinkOrSignupSection user={user} logout={logout} />
-    </div>
+    <HeaderLeftSection {...header} />
+    <HeaderRightSection user={user} {...profile} />
   </nav>
 
-const userControlsActive = (user) => {
-  if (user.controlsActive) {
-    return "navbar-menu is-active"
-  }
-  return "navbar-menu"
-}
-
-const HeaderLeftSection = ({user, hamburger}) =>
+const HeaderLeftSection = ({hamburger}) =>
   <div class='navbar-start'>
     <div class='navbar-brand'>
       <a href='/' class='navbar-item'>
@@ -38,14 +28,18 @@ const HeaderLeftSection = ({user, hamburger}) =>
     </div>
   </div>
 
+const HeaderRightSection = ({user, logout}) =>
+  <div class={controlsActiveClass(user.header)} id='navbarUserControls'>
+    <UserLinkOrSignupSection user={user.profile} logout={logout} />
+  </div>
+
 const UserLinkOrSignupSection = ({user, logout}) => {
   if (user.isLoading || user.isChangingAuthState) {
-    console.log('lloooaddd');
-    <UserProfileNavItemLoading />
+    return <UserProfileNavItemLoading />
   }
 
   if (user.isLoggedIn) {
-    return (<UserProfileNavItem user={user} logout={logout} />)
+    return (<UserProfileNavItem user={user.details} logout={logout} />)
   }
 
   return (<HeaderSignUpSection />)
@@ -78,3 +72,12 @@ export const HeroSection = ({motto}) =>
         </div>
       </div>
     </section>
+
+const controlsActiveClass = (controls) => {
+  if (controls) {
+    if (controls.active) {
+      return "navbar-menu is-active"
+    }
+  }
+  return "navbar-menu"
+}
