@@ -1,6 +1,6 @@
 import { h, app } from "hyperapp"
 import { Link, Route, Redirect, location } from "@hyperapp/router"
-import { CountryCodeDropdown, PhoneNumberInput, PasswordInput, StringInput } from './inputs'
+import { CountryCodeDropdown, PhoneNumberInput, PasswordInput, NumberInput } from './inputs'
 
 export const SignupVerifyView = (user, actions) => ({ location, match }) => {
   var check = redirectChecks(user.profile.details, user.profile)
@@ -39,7 +39,7 @@ const VerifyForm = ({user, error, edit, login}) =>
 const VerifyCodeField = ({details, edit, login}) =>
   <div class="field">
     <p class='control'>
-      <StringInput
+      <NumberInput
         name='verificationCode'
         value={details.verificationCode}
         placeholder='Code received from SMS'

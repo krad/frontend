@@ -1,32 +1,32 @@
 import { h, app } from "hyperapp"
 
-export const OpinionButton = ({broadcast, opinion, name}) =>
+export const OpinionButton = ({details, opinion, action, name}) =>
   <a
-    class={loadingButtonClass(broadcast, name)}
-    onclick={() => opinion(broadcast.broadcastID)}>
+    class={loadingButtonClass(opinion, name)}
+    onclick={() => action(details.broadcastID)}>
     <span class="icon is-small"><i class={iconClassFor(name)}></i></span>
-    <span>{nameFor(broadcast, name)}</span>
+    <span>{nameFor(opinion, name)}</span>
   </a>
 
-const nameFor = (state, opinion) => {
-  if (state.opinion == opinion.toLowerCase()) {
-    switch (state.opinion) {
-      case 'like':
-        return 'Liked'
-        break;
-      case 'dislike':
-        return 'Disliked'
-        break;
-      case 'flag':
-        return 'Flagged'
-        break
+const nameFor = (opinion, name) => {
+  if (opinion) {
+    switch (name) {
+      case 'Like':
+        if (opinion.value) { return "Liked" }
+        return name
+      case 'Dislike':
+        if (opinion.value) { return "Disliked" }
+        return name
+      case 'Flag':
+        if (opinion.value) { return "Flagged" }
+        return name
     }
   }
-  return opinion
+  return name
 }
 
-const iconClassFor = (opinion) => {
-  switch (opinion) {
+const iconClassFor = (name) => {
+  switch (name) {
     case 'Like':
       return "fas fa-thumbs-up"
       break;
@@ -57,14 +57,12 @@ const buttonTypeFor = (opinion) => {
   }
 }
 
-const loadingButtonClass = (state, opinion) => {
-  if (state.isLoading) {
-    if (state.isLoading.hasOwnProperty(opinion.toLowerCase())) {
-      if(state.isLoading[opinion.toLowerCase()]) {
-        return ['button', buttonTypeFor(opinion), 'is-loading'].join(' ')
-      }
+const loadingButtonClass = (state, name) => {
+  if (state) {
+    if (state.isLoading) {
+      return ['button', buttonTypeFor(name), 'is-loading'].join(' ')
     }
   }
 
-  return ['button', buttonTypeFor(opinion)].join(' ')
+  return ['button', buttonTypeFor(name)].join(' ')
 }

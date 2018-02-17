@@ -27,35 +27,78 @@ export const PlayerView = (state, actions) => ({ location, match }) =>
 const ShowBroadcastInfoIf = ({broadcast, like, dislike, flag}) => {
   if (broadcast) {
     if (broadcast.details) {
-      return (<BroadcastInfo broadcast={broadcast.details} like={like} dislike={dislike} flag={flag} />)
+      return (<BroadcastInfo
+                broadcast={broadcast}
+                like={like}
+                dislike={dislike}
+                flag={flag} />)
     }
   }
+
+  return (<div></div>)
 }
 
 const BroadcastInfo = ({broadcast, like, dislike, flag}) =>
   <section id='broadcast-info' class=''>
     <section class='section'>
-      <BroadcastDetails broadcast={broadcast} />
-      <br />
-      <BroadcastControls broadcast={broadcast} like={like} dislike={dislike} flag={flag} />
-      <UserItemProfile user={broadcast.user} />
+      <div class='level'>
+        <div class='level-left'>
+          <BroadcastDetails broadcast={broadcast.details} />
+        </div>
+        <div class='level-right'>
+          <BroadcastControls broadcast={broadcast} like={like} dislike={dislike} flag={flag} />
+        </div>
+      </div>
+      <hr />
+      <PlayerUserInfo broadcast={broadcast.details} />
       <hr />
     </section>
     <CommentBox />
   </section>
 
-const BroadcastDetails = ({broadcast}) =>
-  <div>
-    <p class='title'>{broadcast.title}</p>
-    <p class='subtitle'>{moment(broadcast.createdAt).fromNow()}</p>
-    <p class='subtitle'>{broadcast.views} views</p>
-  </div>
+const BroadcastDetails = ({broadcast}) => {
+  if (broadcast) {
+    return (<div>
+      <p class='title'>{broadcast.title}</p>
+      <p class='subtitle'>{moment(broadcast.createdAt).fromNow()}</p>
+      <p class='subtitle'>{broadcast.views} views</p>
+    </div>)
+  }
+
+  return (<div></div>)
+}
 
 const BroadcastControls = ({broadcast, like, dislike, flag}) =>
-  <div class='level-right'>
-    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={like} name='Like' /></p>
-    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={dislike} name='Dislike' /></p>
-    <p class='level-item'><OpinionButton broadcast={broadcast} opinion={flag} name='Flag' /></p>
+  <div class='level-item'>
+    <div class='level is-mobile'>
+      <div class='level-item has-text-centered'>
+
+        <OpinionButton
+          details={broadcast.details}
+          opinion={broadcast.like}
+          action={like.execute}
+          name='Like' />
+
+      </div>
+      <div class='level-item has-text-centered'>
+
+        <OpinionButton
+          details={broadcast.details}
+          opinion={broadcast.dislike}
+          action={dislike.execute}
+          name='Dislike' />
+
+      </div>
+
+      <div class='level-item has-text-centered'>
+        <OpinionButton
+          details={broadcast.details}
+          opinion={broadcast.flag}
+          action={flag.execute}
+          name='Flag' />
+      </div>
+
+    </div>
   </div>
 
 const VideoTag = ({state, actions, bucket, broadcastID}) =>
@@ -67,9 +110,9 @@ const VideoTag = ({state, actions, bucket, broadcastID}) =>
     <source src={[bucket, broadcastID, 'vod.m3u8'].join('/')} type='application/x-mpegURL' />
   </video>
 
-const PlayerUserInfo = ({user}) =>
+const PlayerUserInfo = ({broadcast}) =>
   <section id='video-user-info' class='card-content'>
     <div class='container'>
-      <UserItemProfile user={user} />
+      <UserItemProfile user={broadcast.user} />
     </div>
   </section>

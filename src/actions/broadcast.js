@@ -31,34 +31,48 @@ export const Broadcast = {
     actions.notifyView(broadcastID)
   },
 
-  setOpinion: value => state => ({opinion: value}),
-
-  postOpinion: value => async (state, actions) => {
-    var loadingKey = {}
-    loadingKey[value.opinion] = true
-
-    actions.setIsLoading(loadingKey)
-    var endpoint = ['/broadcasts', value.broadcastID, value.opinion].join('/')
-    await POST(endpoint, value)
-    .then(result => {
-      actions.setOpinion(value.opinion)
-    }).catch(err => {
-      actions.setError(`Could not ${value} broadcast`)
-    })
-
-    loadingKey[value.opinion] = false
-    actions.setIsLoading(loadingKey)
+  like: {
+    setIsLoading: setIsLoading,
+    setValue: value => state => ({value: value}),
+    execute: broadcastID => async (state, actions) => {
+      actions.setIsLoading(true)
+      var endpoint = ['/broadcasts', broadcastID, 'like'].join('/')
+      await POST(endpoint, {}).then(result => {
+        actions.setValue(true)
+      }).catch(err => {
+        actions.setValue(false)
+      })
+      actions.setIsLoading(false)
+    },
   },
 
-  like: broadcastID => async (state, actions) => {
-    actions.postOpinion({broadcastID: broadcastID, opinion: 'like'})
+  dislike: {
+    setIsLoading: setIsLoading,
+    setValue: value => state => ({value: value}),
+    execute: broadcastID => async (state, actions) => {
+      actions.setIsLoading(true)
+      var endpoint = ['/broadcasts', broadcastID, 'dislike'].join('/')
+      await POST(endpoint, {}).then(result => {
+        actions.setValue(true)
+      }).catch(err => {
+        actions.setValue(false)
+      })
+      actions.setIsLoading(false)
+    },
   },
 
-  dislike: broadcastID => async (state, actions) => {
-    actions.postOpinion({broadcastID: broadcastID, opinion: 'dislike'})
-  },
-
-  flag: broadcastID => async (state, actions) => {
-    actions.postOpinion({broadcastID: broadcastID, opinion: 'flag'})
+  flag: {
+    setIsLoading: setIsLoading,
+    setValue: value => state => ({value: value}),
+    execute: broadcastID => async (state, actions) => {
+      actions.setIsLoading(true)
+      var endpoint = ['/broadcasts', broadcastID, 'flagged'].join('/')
+      await POST(endpoint, {}).then(result => {
+        actions.setValue(true)
+      }).catch(err => {
+        actions.setValue(false)
+      })
+      actions.setIsLoading(false)
+    },
   },
 }

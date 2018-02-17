@@ -6,6 +6,6 @@ export const state = {
   isFetching: false,
   error: null,
   broadcasts: {fetched:[]},
-  currentBroadcast: {},
+  currentBroadcast: {like:{}, dislike:{}, flag:{},},
   channel: {broadcasts: [], user: {}}
 }

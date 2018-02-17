@@ -7,6 +7,6 @@ const getVideoBucket = (isProduction) => {
 }
 
 export const config = {
-  IsTesting: true,
+  IsTesting: false,
   VideoBucket: getVideoBucket(false),
 }

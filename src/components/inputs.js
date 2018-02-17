@@ -22,6 +22,17 @@ export const PhoneNumberInput = ({change, enter, value}) =>
     <span class='icon is-small is-left'><i class='fa fa-phone'></i></span>
   </span>
 
+export const NumberInput = ({name, value, placeholder, change, enter}) =>
+  <input class='input'
+    name={name}
+    type='number'
+    pattern='\d*'
+    value={value}
+    placeholder={placeholder}
+    oninput={e => change({ value: e.target.value, name: name })}
+    onkeydown={(e) => { if(e.which == 13) { e.preventDefault(); enter() } }}
+    />
+
 export const StringInput = ({name, value, placeholder, change, enter}) =>
   <input class='input'
     name={name}
