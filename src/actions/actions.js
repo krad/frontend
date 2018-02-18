@@ -19,7 +19,7 @@ export const actions = {
 
   configurePlayer: el => state => {
     state.player = new plainview(el.id)
-    state.player.play(x => { })
+    state.player.setup(x => { })
   },
 
 }

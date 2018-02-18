@@ -104,7 +104,7 @@ const BroadcastControls = ({broadcast, like, dislike, flag}) =>
 const VideoTag = ({state, actions, bucket, broadcastID}) =>
   <video id={['player', broadcastID].join('-')}
     poster={[bucket, broadcastID, '0.jpg'].join('/')}
-    oncreate={el => actions.configurePlayer(el, state, actions)}
+    oncreate={el => actions.configurePlayer(el)}
     controls
     >
     <source src={[bucket, broadcastID, 'vod.m3u8'].join('/')} type='application/x-mpegURL' />
