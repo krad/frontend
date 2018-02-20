@@ -1,28 +1,51 @@
 import { h, app } from "hyperapp"
 import { Link, Route, location } from "@hyperapp/router"
+import { UserProfileNavItem, UserProfileNavItemLoading } from './users'
+import { HorseshoeSpinner } from './spinner'
 
-export const HeaderSection = ({ input, user }) =>
-  <nav class='navbar is-warning' role='navigation' aria-label='main navigation'>
-    <HeaderLeftSection user={user} />
-    <HeaderRightSection user={user} />
+export const HeaderSection = ({ input, user, header, profile }) =>
+  <nav
+    class='navbar is-warning'
+    role='navigation'
+    aria-label='main navigation'
+    oncreate={profile.checkLoginState} >
+
+    <HeaderLeftSection {...header} />
+    <HeaderRightSection user={user} {...profile} />
   </nav>
 
-const HeaderLeftSection = ({user}) =>
+const HeaderLeftSection = ({hamburger}) =>
   <div class='navbar-start'>
     <div class='navbar-brand'>
       <a href='/' class='navbar-item'>
         <img src='https://www.krad.io/public/images/krad.png' alt='krad.tv - pretty far out radical stuff' />
       </a>
+      <div class="navbar-burger burger" onclick={hamburger}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
   </div>
 
-const HeaderRightSection = ({user}) =>
-  <div class='navbar-end'>
-    <HeaderSignUpSection />
+const HeaderRightSection = ({user, logout}) =>
+  <div class={controlsActiveClass(user.header)} id='navbarUserControls'>
+    <UserLinkOrSignupSection user={user.profile} logout={logout} />
   </div>
 
+const UserLinkOrSignupSection = ({user, logout}) => {
+  if (user.isLoading || user.isChangingAuthState) {
+    return <UserProfileNavItemLoading />
+  }
+
+  if (user.isLoggedIn) {
+    return (<UserProfileNavItem user={user.details} logout={logout} />)
+  }
+
+  return (<HeaderSignUpSection />)
+}
+
 const HeaderSignUpSection = () =>
-  <div class="navbar-end">
     <div class="navbar-item">
       <div class="field is-grouped">
         <p class="control">
@@ -39,19 +62,6 @@ const HeaderSignUpSection = () =>
         </p>
       </div>
     </div>
-  </div>
-
-const HeaderSearch = () =>
-  <div class='navbar-item'>
-    <form class='field has-addons' role='search'>
-      <div class='control'>
-        <input type='text' class='input' placeholder='Search' />
-        <span class="icon is-small is-left">
-          <i class="fas fa-search"></i>
-        </span>
-      </div>
-    </form>
-  </div>
 
 export const HeroSection = ({motto}) =>
     <section class='hero is-info'>
@@ -62,3 +72,12 @@ export const HeroSection = ({motto}) =>
         </div>
       </div>
     </section>
+
+const controlsActiveClass = (controls) => {
+  if (controls) {
+    if (controls.active) {
+      return "navbar-menu is-active"
+    }
+  }
+  return "navbar-menu"
+}

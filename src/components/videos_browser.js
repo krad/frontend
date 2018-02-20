@@ -6,20 +6,19 @@ import { ShowSpinnerIf } from './spinner'
 import { config } from '../config'
 
 export const BrowseVideos = (state, actions) => ({ location, match }) => (
-  <browse oncreate={actions.fetchBroadcasts}>
+  <browse oncreate={actions.broadcasts.fetch}>
     <HeroSection motto={state.motto} />
-    <ShowSpinnerIf isFetching={state.isFetching} />
-
+    <ShowSpinnerIf isFetching={state.broadcasts.isFetching} />
     <VideosSection
       bucket={config.VideoBucket}
-      broadcasts={state.broadcasts}
+      broadcasts={state.broadcasts.fetched}
       state={state}
       actions={actions}
       />
   </browse>
 )
 
-const VideosSection = ({bucket, broadcasts}) =>
+export const VideosSection = ({bucket, broadcasts}) =>
     <section class='section'>
       <div class='container'>
         <div class='columns is-multiline'>
@@ -57,7 +56,9 @@ const VideoItemContent = ({broadcast}) =>
 const VideoItemDetails = ({broadcast}) =>
   <div class='media'>
     <div class='media-content'>
-      <p class='title is-6'>{broadcast.title}</p>
+      <Link to={['/watch', broadcast.broadcastID].join('/')}>
+        <p class='title is-6'>{broadcast.title}</p>
+      </Link>
     </div>
   </div>
 

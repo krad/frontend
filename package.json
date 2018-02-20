@@ -9,8 +9,9 @@
   "author": "krad.tv <iam@krad.io>",
   "license": "MIT",
   "dependencies": {
+    "@hyperapp/logger": "^0.4.1",
     "@hyperapp/router": "^0.4.1",
-    "@krad/plainview": "0.0.16",
+    "@krad/plainview": "1.2.1",
     "hyperapp": "^1.1.2",
     "moment": "^2.20.1"
   },
