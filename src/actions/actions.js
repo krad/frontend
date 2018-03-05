@@ -4,6 +4,7 @@ import { User } from './user'
 import { Broadcasts } from './broadcasts'
 import { Broadcast } from './broadcast'
 import { Channel } from './channel'
+import { edit } from './user/details'
 
 const plainview = require('@krad/plainview')
 
@@ -21,5 +22,25 @@ export const actions = {
     state.player = new plainview(el.id)
     state.player.setup(x => { })
   },
+
+  beta: {
+    setIsLoading: setIsLoading,
+    setError: setError,
+    setSignedUp: value => state => ({signedUp: value}),
+    edit: edit,
+
+    apply: () => async (state, actions) => {
+      actions.setIsLoading(true)
+      await POST('/interest', state.details)
+      .then(result => {
+        actions.setError(null)
+        actions.setSignedUp(true)
+      }).catch(err => {
+        actions.setError('Problem applying for beta testing.')
+        actions.setSignedUp(false)
+      })
+      actions.setIsLoading(false)
+    }
+  }
 
 }

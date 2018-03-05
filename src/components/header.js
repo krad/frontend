@@ -64,14 +64,20 @@ const HeaderSignUpSection = () =>
     </div>
 
 export const HeroSection = ({motto}) =>
-    <section class='hero is-info'>
+    <section class='hero is-info is-bold'>
       <div class='hero-body'>
         <div class='container'>
           <h1 class='title'>krad.tv</h1>
           <h2 class='subtitle'>{motto ? motto : 'Some pretty far out radical stuff.'}</h2>
+          <BetaSignupLink />
         </div>
       </div>
     </section>
+
+export const BetaSignupLink = () =>
+  <div id='beta-signup' class='left'>
+    <Link to='/beta'>Wanna try out our mobile app?</Link>
+  </div>
 
 const controlsActiveClass = (controls) => {
   if (controls) {

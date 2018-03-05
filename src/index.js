@@ -14,6 +14,7 @@ import { ForgotPasswordView } from './components/forgot_password'
 import { ManageProfileView } from './components/profile'
 import { UserChannelView } from './components/user_channel'
 import { HelpView } from './components/help'
+import { BetaSignupView } from './components/beta'
 import logger from "@hyperapp/logger"
 
 actions.location = location.actions
@@ -23,6 +24,7 @@ const view = (state, actions) =>
   <main>
     <HeaderSection user={state.user} {...actions.user} />
     <Route path='/' render={BrowseVideos(state, actions)} />
+    <Route path='/beta' render={BetaSignupView(state.beta, actions.beta)} />
     <Route path='/watch/:broadcastID' render={PlayerView(state, actions)} />
     <Route path='/login' render={LoginView(state.user, actions.user)} />
     <Route path='/signup' render={SignupView(state.user, actions.user)} />

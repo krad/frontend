@@ -45,6 +45,12 @@ const readFromFile = (filename) => {
         return
       }
 
+      if (filename.startsWith('/interest')) {
+        const ok = {}
+        resolve(ok)
+        return
+      }
+
       resolve(null)
       return
     }, 1000)
